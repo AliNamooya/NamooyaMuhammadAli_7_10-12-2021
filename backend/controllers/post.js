@@ -71,7 +71,7 @@ exports.listMsg = (req, res) => {
 //Suppression d'un post
 exports.delete = (req, res) => {
   //req => userId, postId, user.isAdmin
-  let userOrder = req.body.userIdOrder;
+  let userOrder = req.body.userId;
   //identification du demandeur
   let id = utils.getUserId(req.headers.authorization);
   models.User.findOne({
@@ -79,35 +79,32 @@ exports.delete = (req, res) => {
     where: { id: id },
   })
     .then((user) => {
-      //Vérification que le demandeur est soit l'admin soit le poster (vérif aussi sur le front)
-      if (user && (user.isAdmin == true || user.id == userOrder)) {
-        console.log("Suppression du post id :", req.body.postId);
-        models.Post.findOne({
-          where: { id: req.body.postId },
-        })
-          .then((postFind) => {
-            if (postFind.attachement) {
-              const filename = postFind.attachement.split("/images/")[1];
-              console.log("teseeeest", filename);
-              fs.unlink(`images/${filename}`, () => {
-                models.Post.destroy({
-                  where: { id: postFind.id },
-                })
-                  .then(() => res.end())
-                  .catch((err) => res.status(500).json(err));
-              });
-            } else {
+      //rajouter verification si admin ou si c'est le bon utilisateur
+
+      console.log("Suppression du post id :", req.params.id);
+      models.Post.findOne({
+        where: { id: req.params.id },
+      })
+        .then((postFind) => {
+          if (postFind.attachement) {
+            const filename = postFind.attachement.split("/images/")[1];
+            console.log("test", filename);
+            fs.unlink(`images/${filename}`, () => {
               models.Post.destroy({
                 where: { id: postFind.id },
               })
                 .then(() => res.end())
                 .catch((err) => res.status(500).json(err));
-            }
-          })
-          .catch((err) => res.status(500).json(err));
-      } else {
-        res.status(403).json("Utilisateur non autorisé à supprimer ce post");
-      }
+            });
+          } else {
+            models.Post.destroy({
+              where: { id: postFind.id },
+            })
+              .then(() => res.end())
+              .catch((err) => res.status(500).json(err));
+          }
+        })
+        .catch((err) => res.status(500).json(err));
     })
     .catch((error) => res.status(500).json(error));
 };

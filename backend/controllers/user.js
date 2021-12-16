@@ -107,7 +107,7 @@ exports.deleteProfile = (req, res) => {
           where: { userId: user.id },
         })
           .then(() => {
-            console.log("Tous les posts de cet user ont été supprimé");
+            console.log("Tous les posts de ce user ont été supprimé");
             //Suppression de l'utilisateur
             models.User.destroy({
               where: { id: user.id },
@@ -117,7 +117,7 @@ exports.deleteProfile = (req, res) => {
           })
           .catch((err) => res.status(500).json(err));
       } else {
-        res.status(401).json({ error: "Cet user n'existe pas" });
+        res.status(401).json({ error: "Ce user n'existe pas" });
       }
     });
   } else {

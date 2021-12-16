@@ -21,6 +21,6 @@ module.exports = (req, res, next) => {
   }
   // Sinon, on renvoie le statut 401 Unauthorized
   else {
-    res.status(401).json({ error: "accès non authorisé" });
+    res.status(403).json({ error: "unauthorized request" });
   }
 };
