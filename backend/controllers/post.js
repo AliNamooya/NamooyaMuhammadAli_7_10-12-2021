@@ -71,7 +71,6 @@ exports.listMsg = (req, res) => {
 //Suppression d'un post
 exports.delete = (req, res) => {
   //req => userId, postId, user.isAdmin
-  let userOrder = req.body.userId;
   //identification du demandeur
   let id = utils.getUserId(req.headers.authorization);
   models.User.findOne({
@@ -105,6 +104,33 @@ exports.delete = (req, res) => {
           }
         })
         .catch((err) => res.status(500).json(err));
+    })
+    .catch((error) => res.status(500).json(error));
+};
+
+//Modification d'un post
+exports.update = (req, res) => {
+  //identification du demandeur
+  let id = utils.getUserId(req.headers.authorization);
+  models.User.findOne({
+    attributes: ["id", "email", "username", "isAdmin"],
+    where: { id: id },
+  })
+    .then((user) => {
+      //Vérification que le demandeur est soit l'admin soit le poster (vérif aussi sur le front)
+
+      models.Post.update(
+        {
+          title: req.body.title,
+          content: req.body.content,
+          attachement: req.body.attachement,
+        },
+        { where: { id: req.params.id } }
+      )
+
+        .then(() => res.end())
+        .catch((err) => res.status(500).json(err));
+      console.log("Modif ok pour le post :", req.params.id);
     })
     .catch((error) => res.status(500).json(error));
 };
