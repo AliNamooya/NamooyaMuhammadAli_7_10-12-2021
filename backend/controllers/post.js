@@ -47,6 +47,33 @@ exports.create = (req, res) => {
     .catch((error) => res.status(500).json(error));
 };
 
+//Afficher un seul post
+exports.showOne = (req, res) => {
+  const id = req.params.id;
+  const postId = req.params.id;
+  models.Post.findOne({
+    include: {
+      where: { id: postId },
+      model: models.User,
+      attributes: ["username"],
+    },
+  })
+    .then((result) => {
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        res.status(404).json({
+          message: "Comment not found!",
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Something went wrong!",
+      });
+    });
+};
+
 //Afficher les posts sur le mur
 exports.listMsg = (req, res) => {
   models.Post.findAll({
@@ -66,6 +93,33 @@ exports.listMsg = (req, res) => {
       }
     })
     .catch((err) => res.status(500).json(err));
+};
+
+//Modification d'un post
+exports.update = (req, res) => {
+  //identification du demandeur
+  let id = utils.getUserId(req.headers.authorization);
+  models.User.findOne({
+    attributes: ["id", "email", "username", "isAdmin"],
+    where: { id: id },
+  })
+    .then((user) => {
+      //Vérification que le demandeur est soit l'admin soit le poster (vérif aussi sur le front)
+
+      models.Post.update(
+        {
+          title: req.body.title,
+          content: req.body.content,
+          attachement: req.body.attachement,
+        },
+        { where: { id: req.params.id } }
+      )
+
+        .then(() => res.end())
+        .catch((err) => res.status(500).json(err));
+      console.log("Modif ok pour le post :", req.params.id);
+    })
+    .catch((error) => res.status(500).json(error));
 };
 
 //Suppression d'un post
@@ -104,33 +158,6 @@ exports.delete = (req, res) => {
           }
         })
         .catch((err) => res.status(500).json(err));
-    })
-    .catch((error) => res.status(500).json(error));
-};
-
-//Modification d'un post
-exports.update = (req, res) => {
-  //identification du demandeur
-  let id = utils.getUserId(req.headers.authorization);
-  models.User.findOne({
-    attributes: ["id", "email", "username", "isAdmin"],
-    where: { id: id },
-  })
-    .then((user) => {
-      //Vérification que le demandeur est soit l'admin soit le poster (vérif aussi sur le front)
-
-      models.Post.update(
-        {
-          title: req.body.title,
-          content: req.body.content,
-          attachement: req.body.attachement,
-        },
-        { where: { id: req.params.id } }
-      )
-
-        .then(() => res.end())
-        .catch((err) => res.status(500).json(err));
-      console.log("Modif ok pour le post :", req.params.id);
     })
     .catch((error) => res.status(500).json(error));
 };
