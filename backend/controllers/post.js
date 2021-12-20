@@ -109,7 +109,7 @@ exports.update = (req, res) => {
     where: { id: id },
   })
     .then((user) => {
-      //Vérification que le demandeur est soit l'admin soit le poster (vérif aussi sur le front)
+      //Vérification a faire ici
 
       models.Post.update(
         {
