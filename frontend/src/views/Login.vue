@@ -50,6 +50,8 @@
         v-if="mode == 'login'"
       >
         <span v-if="status == 'loading'">Connexion en cours...</span>
+        <!-- spinner -->
+
         <span v-else>Connexion</span>
       </button>
       <button
@@ -59,6 +61,7 @@
         v-else
       >
         <span v-if="status == 'loading'">Création en cours...</span>
+        <!-- spinner -->
         <span v-else>Créer mon compte</span>
       </button>
     </div>
@@ -66,6 +69,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Login",
   data: function () {
@@ -76,6 +80,13 @@ export default {
       password: "",
     };
   },
+  //Si on se deconnect pas, on peut pas aller sur login
+  // mounted: function () {
+  //   if (this.$store.state.user.userId != -1) {
+  //     this.$router.push("/profile");
+  //     return;
+  //   }
+  // },
   computed: {
     validatedFields: function () {
       if (this.mode == "create") {
@@ -92,6 +103,7 @@ export default {
         }
       }
     },
+    ...mapState(["status"]),
   },
 
   methods: {
@@ -101,8 +113,24 @@ export default {
     switchToLogin: function () {
       this.mode = "login";
     },
+    login: function () {
+      const self = this;
+      this.$store
+        .dispatch("login", {
+          email: this.email,
+          password: this.password,
+        })
+        .then(
+          function () {
+            self.$router.push("/wall"); //une fois logger on nous renvoie vers les posts
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
+    },
     createAccount: function () {
-      console.log(this.email, this.username, this.password);
+      const self = this;
       this.$store
         .dispatch("createAccount", {
           email: this.email,
@@ -110,8 +138,8 @@ export default {
           password: this.password,
         })
         .then(
-          function (response) {
-            console.log(response);
+          function () {
+            self.login(); //connexion automatique apres creation du compte
           },
           function (error) {
             console.log(error);

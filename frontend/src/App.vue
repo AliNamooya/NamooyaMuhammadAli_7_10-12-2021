@@ -1,13 +1,20 @@
 <template>
-  <router-view />
+  <!-- <Header /> -->
+  <div id="container">
+    <router-view />
+  </div>
+
   <!-- <router-link to="/login">Login</router-link> -->
   <!-- <router-link to="/about">About</router-link> -->
 </template>
 
 <script>
+// import Header from "./components/Header.vue";   importer sur la page des posts et non sur app sinon ce sera visible sur toutes les pages
 export default {
   name: "App",
-  components: {},
+  components: {
+    // Header,
+  },
 };
 </script>
 
@@ -26,6 +33,13 @@ export default {
 }
 #app {
   max-width: 100%;
+  width: 100%;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 body {
   background-image: linear-gradient(62deg, #fbab7e 0%, #f7ce68 100%);
@@ -33,7 +47,6 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 32px;
 }
 img {
   max-width: 100%;
