@@ -35,6 +35,7 @@ const store = createStore({
   state: {
     status: "",
     user: user,
+
     userInfos: {
       email: "",
       username: "",

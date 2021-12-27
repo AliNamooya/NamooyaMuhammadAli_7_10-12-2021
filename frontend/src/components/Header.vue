@@ -36,9 +36,10 @@ nav {
   align-items: baseline;
   background-color: #313638;
   width: 100%;
-  position: fixed;
+  position: relative;
   top: 0;
   padding: 20px;
+  margin-bottom: 50px;
 }
 
 ul {

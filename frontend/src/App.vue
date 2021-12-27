@@ -38,6 +38,7 @@ export default {
 
 #container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -52,6 +53,7 @@ img {
   max-width: 100%;
   border-radius: 8px;
 }
+
 .card {
   max-width: 100%;
   width: 540px;
