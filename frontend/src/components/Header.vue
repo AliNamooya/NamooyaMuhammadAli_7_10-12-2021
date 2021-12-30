@@ -2,14 +2,18 @@
   <nav>
     <ul>
       <li class="margin_right">
-        <a href="#">Home</a>
+        <a @click="homeRedirect()">Home</a>
       </li>
       <li>
-        <a href="#">Profile</a>
+        <a @click="profileRedirect()">Profile</a>
       </li>
     </ul>
     <div class="logo">
-      <img src="../assets/icon-left-font-monochrome-white.png" alt="logo" />
+      <img
+        @click="homeRedirect()"
+        src="../assets/icon-left-font-monochrome-white.png"
+        alt="logo"
+      />
     </div>
 
     <button @click="logout()" class="button">Déconnexion</button>
@@ -23,6 +27,12 @@ export default {
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/login");
+    },
+    profileRedirect: function () {
+      this.$router.push("/profile");
+    },
+    homeRedirect: function () {
+      this.$router.push("/wall");
     },
   },
 };
@@ -53,13 +63,14 @@ li {
   list-style: none;
 
   a {
-    color: white;
+    color: white !important;
     text-decoration: none;
     font-weight: 500;
   }
 }
 a:hover {
   color: #fbab7e;
+  cursor: pointer;
 }
 
 button {
@@ -73,5 +84,8 @@ img {
   object-fit: cover;
   height: 50px;
   width: 100%;
+}
+img:hover {
+  cursor: pointer;
 }
 </style>

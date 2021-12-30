@@ -1,17 +1,20 @@
 import { createStore } from "vuex";
 const axios = require("axios");
 
+//API-------------------------------------
 //base lien api users
 const usersAPI = axios.create({
   baseURL: "http://localhost:3000/api/user",
 });
 
 //base lien api post
-const postsAPI = axios.create({
-  baseURL: "http://localhost:3000/api/post",
-});
+// const postsAPI = axios.create({
+//   baseURL: "http://localhost:3000/api/post",
+// });
 
-let user = localStorage.getItem("user");
+//-------------------------------------
+
+let user = localStorage.getItem("user"); //récupération du token
 //si ce n'est pas un user, son userId = -1 et il est renvoyer vers le login
 if (!user) {
   user = {
@@ -39,7 +42,13 @@ const store = createStore({
     userInfos: {
       email: "",
       username: "",
-      // rajouter image
+      // attachement: '',
+    },
+
+    postInfos: {
+      title: "",
+      content: "",
+      // attachement: '',
     },
   },
   mutations: {
@@ -48,7 +57,7 @@ const store = createStore({
     },
 
     logUser: function (state, user) {
-      usersAPI.defaults.headers.common["Authorization"] = user.token;
+      usersAPI.defaults.headers.common["Authorization"] = user.token; //appelle du token ici
       localStorage.setItem("user", JSON.stringify(user));
       state.user = user;
     },
@@ -99,23 +108,46 @@ const store = createStore({
     },
 
     // afficher les informations de l'utilisateur
-    getUserInfos: ({ commit }, userInfos) => {
+    getUserInfos: ({ commit }) => {
       usersAPI
         .get("/me")
-        .then(function () {
-          commit("userInfos", userInfos.data);
-        })
-        .catch(function () {});
-    },
-
-    showPosts: ({ commit }) => {
-      postsAPI
-        .get("/")
         .then(function (response) {
           commit("userInfos", response.data);
         })
         .catch(function () {});
     },
+    // a revoir Rajouter token-----------------------
+    // getAllPosts: ({ commit }, user) => {
+    //   postsAPI
+    //     .get("/")
+    //     .then(function (response) {
+    //       console.log(response);
+    //       commit("posts", response.user.data);
+    //     })
+    //     .catch(function () {});
+    // },
+    //----------------------------------------------------
+
+    // createPost: ({ commit }, postInfos) => {
+    //   commit;
+    //   return new Promise((resolve, rekect) => {
+    //     postsAPI
+    //     .get("/create", postInfos)
+    //     .then(function (response) {
+    //       resolve(response);
+    //     })
+    //     .catch(function (error) {
+    //       reject(error);
+    //     });
+    //   })
+    // },
+
+    // deletePost: (postId) => {
+    //   postsAPI.get("/" + postId).then((response) => {
+    //     this.result.splice(postId);
+    //     console.log(this.result);
+    //   });
+    // },
   },
   modules: {},
 });

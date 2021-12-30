@@ -1,69 +1,71 @@
 <template>
-  <div class="card">
-    <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
-    <h1 class="card__title" v-else>Inscription</h1>
-    <p class="card__subtitle" v-if="mode == 'login'">
-      Tu n'as pas encore de compte ?
-      <span class="card__action" @click="switchToCreateAccount()"
-        >Créer un compte</span
-      >
-    </p>
-    <p class="card__subtitle" v-else>
-      Tu as déjà un compte ?
-      <span class="card__action" @click="switchToLogin()">Se connecter</span>
-    </p>
-    <div class="form-row">
-      <input
-        v-model="email"
-        class="form-row__input"
-        type="text"
-        placeholder="Adresse mail"
-      />
-    </div>
-    <div class="form-row" v-if="mode == 'create'">
-      <input
-        v-model="username"
-        class="form-row__input"
-        type="text"
-        placeholder="Username"
-      />
-    </div>
-    <div class="form-row">
-      <input
-        v-model="password"
-        class="form-row__input"
-        type="password"
-        placeholder="Mot de passe"
-      />
-    </div>
-    <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
-      Adresse mail et/ou mot de passe invalide
-    </div>
-    <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
-      Adresse mail déjà utilisée
-    </div>
-    <div class="form-row">
-      <button
-        @click="login()"
-        class="button"
-        :class="{ 'button--disabled': !validatedFields }"
-        v-if="mode == 'login'"
-      >
-        <span v-if="status == 'loading'">Connexion en cours...</span>
-        <!-- spinner -->
+  <div class="card_container">
+    <div class="card">
+      <h1 class="card__title" v-if="mode == 'login'">Connexion</h1>
+      <h1 class="card__title" v-else>Inscription</h1>
+      <p class="card__subtitle" v-if="mode == 'login'">
+        Tu n'as pas encore de compte ?
+        <span class="card__action" @click="switchToCreateAccount()"
+          >Créer un compte</span
+        >
+      </p>
+      <p class="card__subtitle" v-else>
+        Tu as déjà un compte ?
+        <span class="card__action" @click="switchToLogin()">Se connecter</span>
+      </p>
+      <div class="form-row">
+        <input
+          v-model="email"
+          class="form-row__input"
+          type="text"
+          placeholder="Adresse mail"
+        />
+      </div>
+      <div class="form-row" v-if="mode == 'create'">
+        <input
+          v-model="username"
+          class="form-row__input"
+          type="text"
+          placeholder="Username"
+        />
+      </div>
+      <div class="form-row">
+        <input
+          v-model="password"
+          class="form-row__input"
+          type="password"
+          placeholder="Mot de passe"
+        />
+      </div>
+      <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
+        Adresse mail et/ou mot de passe invalide
+      </div>
+      <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
+        Adresse mail déjà utilisée
+      </div>
+      <div class="form-row">
+        <button
+          @click="login()"
+          class="button"
+          :class="{ 'button--disabled': !validatedFields }"
+          v-if="mode == 'login'"
+        >
+          <span v-if="status == 'loading'">Connexion en cours...</span>
+          <!-- spinner -->
 
-        <span v-else>Connexion</span>
-      </button>
-      <button
-        @click="createAccount()"
-        class="button"
-        :class="{ 'button--disabled': !validatedFields }"
-        v-else
-      >
-        <span v-if="status == 'loading'">Création en cours...</span>
-        <!-- spinner -->
-        <span v-else>Créer mon compte</span>
-      </button>
+          <span v-else>Connexion</span>
+        </button>
+        <button
+          @click="createAccount()"
+          class="button"
+          :class="{ 'button--disabled': !validatedFields }"
+          v-else
+        >
+          <span v-if="status == 'loading'">Création en cours...</span>
+          <!-- spinner -->
+          <span v-else>Créer mon compte</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -151,6 +153,12 @@ export default {
 </script>
 
 <style scoped>
+.card_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
 .form-row {
   display: flex;
   margin: 16px 0px;

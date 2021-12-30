@@ -3,13 +3,9 @@
   <div id="container">
     <router-view />
   </div>
-
-  <!-- <router-link to="/login">Login</router-link> -->
-  <!-- <router-link to="/about">About</router-link> -->
 </template>
 
 <script>
-// import Header from "./components/Header.vue";   importer sur la page des posts et non sur app sinon ce sera visible sur toutes les pages
 export default {
   name: "App",
   components: {
@@ -31,24 +27,18 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
-#app {
-  max-width: 100%;
-  width: 100%;
-}
 
 #container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; Pour la page login */
   align-items: center;
-}
-body {
+  max-width: 100%;
+  width: 100%;
   background-image: linear-gradient(62deg, #fbab7e 0%, #f7ce68 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
 }
+
 img {
   max-width: 100%;
   border-radius: 8px;
@@ -71,7 +61,7 @@ img {
   font-weight: 500;
 }
 .button {
-  background: #2196f3;
+  background: #1bb3eb;
   color: white;
   border-radius: 8px;
   font-weight: 800;
@@ -99,5 +89,28 @@ img {
 .button--disabled:hover {
   cursor: not-allowed;
   background: #cecece;
+}
+
+/* Form */
+.form-row {
+  display: flex;
+  margin: 16px 0px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.form-row__input {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #f2f2f2;
+  font-weight: 500;
+  font-size: 16px;
+  flex: 1;
+  min-width: 100px;
+  color: black;
+}
+.form-row__input::placeholder {
+  color: #aaaaaa;
+  text-align: center;
 }
 </style>
