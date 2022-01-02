@@ -38,11 +38,12 @@
       </button>
     </div>
 
-    <button class="button">Poster</button>
+    <button @click="postComment()" class="button">Poster</button>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "NewPost",
   // computed: {
@@ -55,9 +56,19 @@ export default {
   //     }
   //   },
   //}
-
+  data: function () {
+    return {
+      title: "",
+      content: "",
+    };
+  },
+  computed: {
+    ...mapState({
+      user: "userInfos",
+    }),
+  },
   methods: {
-    createPost: function () {
+    postComment: function () {
       this.$store
         .dispatch("createPost", {
           title: this.title,

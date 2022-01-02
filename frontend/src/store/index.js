@@ -8,9 +8,9 @@ const usersAPI = axios.create({
 });
 
 //base lien api post
-// const postsAPI = axios.create({
-//   baseURL: "http://localhost:3000/api/post",
-// });
+const postsAPI = axios.create({
+  baseURL: "http://localhost:3000/api/post",
+});
 
 //-------------------------------------
 
@@ -57,7 +57,8 @@ const store = createStore({
     },
 
     logUser: function (state, user) {
-      usersAPI.defaults.headers.common["Authorization"] = user.token; //appelle du token ici
+      usersAPI.defaults.headers.common["Authorization"] = user.token;
+      //le token et userId sont inserer dans le localstorage
       localStorage.setItem("user", JSON.stringify(user));
       state.user = user;
     },
@@ -116,31 +117,46 @@ const store = createStore({
         })
         .catch(function () {});
     },
-    // a revoir Rajouter token-----------------------
-    // getAllPosts: ({ commit }, user) => {
-    //   postsAPI
-    //     .get("/")
-    //     .then(function (response) {
-    //       console.log(response);
-    //       commit("posts", response.user.data);
-    //     })
-    //     .catch(function () {});
-    // },
-    //----------------------------------------------------
+    //--------------------------POST----------------------------------
+    //statut 200 OK mais pas de data en retour
+    getAllPosts: ({ commit }) => {
+      postsAPI
+        .get("/", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem(user.token),
+          },
+        })
+        .then(function (response) {
+          console.log(response);
+          commit("post", response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
 
-    // createPost: ({ commit }, postInfos) => {
-    //   commit;
-    //   return new Promise((resolve, rekect) => {
-    //     postsAPI
-    //     .get("/create", postInfos)
-    //     .then(function (response) {
-    //       resolve(response);
-    //     })
-    //     .catch(function (error) {
-    //       reject(error);
-    //     });
-    //   })
-    // },
+    // status 403 (Forbidden), network = unauthorized request
+    createPost: ({ commit }) => {
+      console.log(user.token);
+
+      commit;
+      return new Promise((resolve, reject) => {
+        user = JSON.parse(user);
+        usersAPI.defaults.headers.common["Authorization"] = user.token;
+        postsAPI
+          .post("/create", {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem(user.token),
+            },
+          })
+          .then(function (response) {
+            resolve(response);
+          })
+          .catch(function (error) {
+            reject(error);
+          });
+      });
+    },
 
     // deletePost: (postId) => {
     //   postsAPI.get("/" + postId).then((response) => {

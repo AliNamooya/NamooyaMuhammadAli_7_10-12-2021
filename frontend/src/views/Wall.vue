@@ -15,8 +15,16 @@ export default {
     NewPost,
     Comment,
   },
+  data() {
+    return {
+      post: {
+        id: "",
+        content: "",
+      },
+    };
+  },
   mounted: function () {
-    this.$store.dispatch("showPosts");
+    this.$store.dispatch("getAllPosts");
   },
 };
 </script>

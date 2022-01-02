@@ -53,7 +53,6 @@ exports.showOne = (req, res) => {
   const postId = req.params.id;
 
   //recuperer le model avec en lien le username
-
   models.Post.findOne({
     include: {
       where: { id: postId },
@@ -61,7 +60,6 @@ exports.showOne = (req, res) => {
       attributes: ["username"], //on affiche le username de celui qui a crée le post
     },
   })
-
     .then((result) => {
       if (result) {
         //on affiche le resultat des requetes ici
