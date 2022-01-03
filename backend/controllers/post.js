@@ -1,11 +1,12 @@
-let models = require("../models");
-let utils = require("../middleware/jwtUtils");
+const models = require("../models");
+const utils = require("../middleware/jwtUtils");
 const fs = require("fs");
 
+//attachement ne fonctionne pas
 exports.create = (req, res) => {
   //Declaration de l'url de l'image
   let attachmentURL;
-  //identifier qui créé le message
+  //identifier qui a créé le message
   let id = utils.getUserId(req.headers.authorization);
   models.User.findOne({
     attributes: ["id", "email", "username"],
@@ -16,7 +17,7 @@ exports.create = (req, res) => {
         //Récupération du corps du post
         let content = req.body.content;
         let title = req.body.title;
-        if (req.file != undefined) {
+        if (req.file != null) {
           attachmentURL = `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
           }`;
@@ -48,14 +49,13 @@ exports.create = (req, res) => {
 };
 
 //Afficher un seul post
-exports.showOne = (req, res) => {
-  const id = req.params.id;
-  const postId = req.params.id;
+exports.showUserPost = (req, res) => {
+  const userId = req.params.id;
 
   //recuperer le model avec en lien le username
-  models.Post.findOne({
+  models.Post.findAll({
     include: {
-      where: { id: postId },
+      where: { id: userId },
       model: models.User,
       attributes: ["username"], //on affiche le username de celui qui a crée le post
     },
@@ -66,7 +66,7 @@ exports.showOne = (req, res) => {
         res.status(200).json(result);
       } else {
         res.status(404).json({
-          message: "Comment not found!",
+          message: "User's comments not found!",
         });
       }
     })
@@ -130,13 +130,13 @@ exports.delete = (req, res) => {
   //req => userId, postId, user.isAdmin
   //identification du demandeur
   let id = utils.getUserId(req.headers.authorization);
+
   models.User.findOne({
     attributes: ["id", "email", "username", "isAdmin"],
     where: { id: id },
   })
     .then((user) => {
       //rajouter verification si admin ou si c'est le bon utilisateur
-
       console.log("Suppression du post id :", req.params.id);
       models.Post.findOne({
         where: { id: req.params.id },

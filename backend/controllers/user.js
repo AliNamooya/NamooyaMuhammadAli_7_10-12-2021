@@ -1,6 +1,6 @@
-let bcrypt = require("bcrypt");
-let models = require("../models");
-let utils = require("../middleware/jwtUtils");
+const bcrypt = require("bcrypt");
+const models = require("../models");
+const utils = require("../middleware/jwtUtils");
 
 //Création d'un user
 exports.signup = (req, res) => {
