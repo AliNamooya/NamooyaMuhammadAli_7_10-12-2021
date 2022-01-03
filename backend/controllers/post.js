@@ -99,68 +99,73 @@ exports.listMsg = (req, res) => {
 };
 
 //Modification d'un post
-exports.update = (req, res) => {
-  //identification du demandeur
-  let id = utils.getUserId(req.headers.authorization);
-  models.User.findOne({
-    attributes: ["id", "email", "username", "isAdmin"],
-    where: { id: id },
-  })
-    .then((user) => {
-      //Vérification a faire ici
+exports.update = async (req, res) => {
+  try {
+    // try to find this post by his Id
+    let newAttachementURL;
+    const userId = utils.getUserId(req.headers.authorization);
+    let post = await models.Post.findOne({ where: { id: req.params.id } });
+    // Make sure this user is the owner
+    if (userId == post.userId) {
+      // if a file is in the request
+      if (req.file != null) {
+        newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`;
+        // if an image was already in database
+        if (post.attachement) {
+          const filename = post.attachement.split("/images")[1];
+          // delete it from the "images" file
+          fs.unlink(`images/${filename}`, (err) => {
+            if (err) console.log(err);
+            else {
+              console.log(`Deleted file: images/${filename}`);
+            }
+          });
+        }
+      } // if a new message is in the request
+      if (req.body.title && req.body.content) {
+        post.title = req.body.title;
+        post.content = req.body.content;
+      }
 
-      models.Post.update(
-        {
-          title: req.body.title,
-          content: req.body.content,
-          attachement: req.body.attachement,
-        },
-        { where: { id: req.params.id } }
-      )
-
-        .then(() => res.end())
-        .catch((err) => res.status(500).json(err));
-      console.log("Modif ok pour le post :", req.params.id);
-    })
-    .catch((error) => res.status(500).json(error));
+      post.attachement = newAttachementURL;
+      // then we save everything in database
+      const newPost = await post.save({
+        fields: ["title", "content", "attachement"],
+      });
+      res.status(200).json({ newPost: newPost, message: "post modifié" });
+    } else {
+      res.status(400).json({ message: "Vous n'avez pas les droits requis" });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
 
 //Suppression d'un post
-exports.delete = (req, res) => {
-  //req => userId, postId, user.isAdmin
-  //identification du demandeur
-  let id = utils.getUserId(req.headers.authorization);
-
-  models.User.findOne({
-    attributes: ["id", "email", "username", "isAdmin"],
-    where: { id: id },
-  })
-    .then((user) => {
-      //rajouter verification si admin ou si c'est le bon utilisateur
-      console.log("Suppression du post id :", req.params.id);
-      models.Post.findOne({
-        where: { id: req.params.id },
-      })
-        .then((postFind) => {
-          if (postFind.attachement) {
-            const filename = postFind.attachement.split("/images/")[1];
-            console.log("test", filename);
-            fs.unlink(`images/${filename}`, () => {
-              models.Post.destroy({
-                where: { id: postFind.id },
-              })
-                .then(() => res.end())
-                .catch((err) => res.status(500).json(err));
-            });
-          } else {
-            models.Post.destroy({
-              where: { id: postFind.id },
-            })
-              .then(() => res.end())
-              .catch((err) => res.status(500).json(err));
-          }
-        })
-        .catch((err) => res.status(500).json(err));
-    })
-    .catch((error) => res.status(500).json(error));
+exports.delete = async (req, res) => {
+  try {
+    const userId = utils.getUserId(req.headers.authorization);
+    const checkIfAdmin = await models.User.findOne({
+      where: { id: userId },
+    });
+    const post = await models.Post.findOne({ where: { id: req.params.id } });
+    if (userId === post.UserId || checkIfAdmin.isAdmin === true) {
+      if (post.attachement) {
+        const filename = post.attachement.split("/images/")[1];
+        fs.unlink(`images/${filename}`, () => {
+          models.Post.destroy({ where: { id: post.id } });
+          res.status(200).json({ message: "Post supprimé" });
+        });
+      } else {
+        models.Post.destroy({ where: { id: post.id } });
+        res.status(200).json({ message: "Post supprimé" });
+      }
+    } else {
+      res.status(401).json({ message: "Vous n'avez pas les droits requis" });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
