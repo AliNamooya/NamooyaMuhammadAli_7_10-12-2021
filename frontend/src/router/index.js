@@ -5,7 +5,7 @@ import Profile from "../views/Profile.vue";
 
 const routes = [
   {
-    path: "/login",
+    path: "/",
     name: "Login",
     component: Login,
   },

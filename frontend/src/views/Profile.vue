@@ -2,7 +2,7 @@
   <Header />
 
   <div class="card">
-    <h1 class="card__title">Espace Perso</h1>
+    <h1 class="card__title">Espace Perso de {{}}</h1>
     <p class="card__subtitle">Voilà donc qui je suis...</p>
   </div>
 
@@ -23,7 +23,7 @@ export default {
     console.log(this.$store.state.user); //renvoie le userId et le token
     //on se deconnect automatiquement si le user n'a pas de compte
     if (this.$store.state.user.userId == -1) {
-      this.$router.push("/login");
+      this.$router.push("/");
       return;
     }
     //on affiche les informations du user
@@ -31,14 +31,14 @@ export default {
   },
   computed: {
     ...mapState({
-      user: "postInfos",
+      user: "userInfos",
     }),
   },
   methods: {
     // fontion liée au bouton deconnexion
     logout: function () {
       this.$store.commit("logout");
-      this.$router.push("/login");
+      this.$router.push("/");
     },
   },
 };
