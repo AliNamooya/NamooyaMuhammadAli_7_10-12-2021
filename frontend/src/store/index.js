@@ -25,7 +25,7 @@ if (!user) {
 } else {
   try {
     user = JSON.parse(user);
-    usersAPI.defaults.headers.common["Authorization"] = user.token;
+    usersAPI.defaults.headers.common["Authorization"] = "Bearer " + user.token;
   } catch (ex) {
     user = {
       userId: -1,
@@ -42,13 +42,12 @@ const store = createStore({
     userInfos: {
       email: "",
       username: "",
-      // attachement: '',
     },
 
     postInfos: {
       title: "",
       content: "",
-      // attachement: '',
+      attachement: "",
     },
   },
   mutations: {
@@ -57,7 +56,8 @@ const store = createStore({
     },
 
     logUser: function (state, user) {
-      usersAPI.defaults.headers.common["Authorization"] = user.token;
+      usersAPI.defaults.headers.common["Authorization"] =
+        "Bearer " + user.token;
       //le token et userId sont inserer dans le localstorage
       localStorage.setItem("user", JSON.stringify(user));
       state.user = user;
@@ -118,8 +118,9 @@ const store = createStore({
         .catch(function () {});
     },
     //--------------------------POST----------------------------------
-    //statut 200 OK mais pas de data en retour
+    //status 200 OK mais pas de data en retour
     getAllPosts: ({ commit }) => {
+      user = JSON.parse(user);
       postsAPI
         .get("/", {
           headers: {
@@ -159,7 +160,7 @@ const store = createStore({
     },
 
     // deletePost: (postId) => {
-    //   postsAPI.get("/" + postId).then((response) => {
+    //   postsAPI.delete("/" + postId).then((response) => {
     //     this.result.splice(postId);
     //     console.log(this.result);
     //   });

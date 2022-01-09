@@ -18,8 +18,8 @@
           </svg>
         </div>
       </div>
-      <!-- <img src="" alt=""> -->
       <h3 class="card__title">Titre du commentaire</h3>
+      <!-- <img src="" alt="photo" /> -->
       <p class="card__subtitle">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
         accumsan nisi quis rutrum feugiat. Phasellus pharetra sem eros, non
@@ -75,5 +75,23 @@ svg {
 
 .delete {
   width: 5%;
+}
+
+img {
+  object-fit: cover;
+  margin-bottom: 0.5rem;
+}
+
+.btn-secondary {
+  background-color: rgba(128, 128, 128, 0.612);
+  border-radius: 35%;
+}
+
+.btn-secondary:active {
+  background-color: rgba(128, 128, 128, 0.845);
+}
+
+.bi-hand-thumbs-up {
+  color: white;
 }
 </style>

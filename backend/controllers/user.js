@@ -10,7 +10,7 @@ exports.signup = (req, res) => {
   const password = req.body.password;
 
   if (email == null || username == null || password == null) {
-    res.status(400).json({ error: "il manque un paramètre" });
+    return res.status(400).json({ error: "il manque un paramètre" });
   }
 
   models.User.findOne({
