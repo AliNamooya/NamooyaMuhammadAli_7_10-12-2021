@@ -48,7 +48,7 @@ exports.create = (req, res) => {
     .catch((error) => res.status(500).json(error));
 };
 
-//Afficher un seul post
+//Afficher les posts d'un seul user
 exports.showUserPost = (req, res) => {
   const userId = req.params.id;
 

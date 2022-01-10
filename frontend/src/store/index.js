@@ -137,6 +137,17 @@ const store = createStore({
         .catch(function () {});
     },
 
+    getUserPosts: ({ commit }) => {
+      postsAPI
+        .get("/" + user.userId, {
+          headers: { Authorization: "Bearer " + user.token },
+        })
+        .then(function (response) {
+          commit("postInfos", response.data);
+        })
+        .catch(function () {});
+    },
+
     // status 403 (Forbidden), network = unauthorized request
     createPost: ({ commit }) => {
       commit;

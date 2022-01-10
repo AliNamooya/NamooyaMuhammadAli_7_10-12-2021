@@ -32,7 +32,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  name: "Comment",
+  name: "ProfileComment",
 
   mounted: function () {
     console.log(this.$store.state.user);
@@ -40,7 +40,7 @@ export default {
       this.$router.push("/");
       return;
     }
-    this.$store.dispatch("getAllPosts");
+    this.$store.dispatch("getUserPosts");
   },
   computed: {
     ...mapState({

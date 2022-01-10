@@ -1,19 +1,20 @@
 <template>
-  <Header />
-  <NewPost />
-  <Comment />
+  <div id="wall">
+    <Header />
+    <FeedComment />
+  </div>
 </template>
 
 <script>
 import Header from "../components/Header.vue";
-import NewPost from "../components/NewPost.vue";
-import Comment from "../components/Comment.vue";
+
+import FeedComment from "../components/FeedComment.vue";
 export default {
   name: "Wall",
   components: {
     Header,
-    NewPost,
-    Comment,
+
+    FeedComment,
   },
 };
 </script>
@@ -21,5 +22,15 @@ export default {
 <style scoped>
 nav {
   flex: none;
+}
+
+#wall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  width: 100%;
+  background-image: linear-gradient(62deg, #fbab7e 0%, #f7ce68 100%);
+  min-height: 100vh;
 }
 </style>
