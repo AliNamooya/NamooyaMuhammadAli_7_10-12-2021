@@ -31,14 +31,24 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "Comment",
 
-  // a revoir Rajouter token-----------------------------
-  // mounted({ commit }) {
-  // this.$store.dispatch("getAllPosts");
-  // },
-  //---------------------------------------
+  mounted: function () {
+    console.log(this.$store.state.user);
+    if (this.$store.state.user.userId == -1) {
+      this.$router.push("/");
+      return;
+    }
+    this.$store.dispatch("getAllPosts");
+  },
+  computed: {
+    ...mapState({
+      post: "postInfos",
+      user: "userInfos",
+    }),
+  },
 };
 </script>
 

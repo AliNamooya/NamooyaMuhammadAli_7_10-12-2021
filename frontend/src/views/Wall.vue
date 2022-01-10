@@ -15,10 +15,6 @@ export default {
     NewPost,
     Comment,
   },
-
-  // mounted: function () {
-  //   this.$store.dispatch("getAllPosts");
-  // },
 };
 </script>
 

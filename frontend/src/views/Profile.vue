@@ -2,8 +2,8 @@
   <Header />
 
   <div class="card">
-    <h1 class="card__title">Espace Perso de {{}}</h1>
-    <p class="card__subtitle">Voilà donc qui je suis...</p>
+    <h1 class="card__title">Espace Perso de : {{ user.username }}</h1>
+    <p class="card__subtitle">Mon adresse mail est : {{ user.email }}</p>
   </div>
 
   <Comment />
@@ -24,7 +24,7 @@ export default {
     //on se deconnect automatiquement si le user n'a pas de compte
     if (this.$store.state.user.userId == -1) {
       this.$router.push("/");
-      return;
+      return; //rerturn pour que le code en bas ne soit pas accessible si le user n'est pas logger
     }
     //on affiche les informations du user
     this.$store.dispatch("getUserInfos");

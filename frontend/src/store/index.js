@@ -34,17 +34,20 @@ if (!user) {
   }
 }
 
+//création du store
 const store = createStore({
   state: {
     status: "",
     user: user,
 
     userInfos: {
+      userId: "",
       email: "",
       username: "",
     },
 
     postInfos: {
+      id: "",
       title: "",
       content: "",
       attachement: "",
@@ -109,6 +112,7 @@ const store = createStore({
     },
 
     // afficher les informations de l'utilisateur
+    //CA FONCTIOOONNNNEEEEEEEEEEEEEEE
     getUserInfos: ({ commit }) => {
       usersAPI
         .get("/me")
@@ -117,38 +121,26 @@ const store = createStore({
         })
         .catch(function () {});
     },
-    //--------------------------POST----------------------------------
-    //status 200 OK mais pas de data en retour
+    //---------------------POST-----------------------------
+    //status 403 unauthorized request, il manque l'autorisation des headers
     getAllPosts: ({ commit }) => {
-      user = JSON.parse(user);
       postsAPI
         .get("/", {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem(user.token),
-          },
+          headers: { Authorization: "Bearer " + user.token },
         })
         .then(function (response) {
-          console.log(response);
-          commit("post", response.data);
+          commit("userInfos", "postInfos", response.data);
         })
-        .catch(function (error) {
-          console.log(error);
-        });
+        .catch(function () {});
     },
 
     // status 403 (Forbidden), network = unauthorized request
     createPost: ({ commit }) => {
-      console.log(user.token);
-
       commit;
       return new Promise((resolve, reject) => {
-        user = JSON.parse(user);
-        usersAPI.defaults.headers.common["Authorization"] = user.token;
         postsAPI
           .post("/create", {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem(user.token),
-            },
+            headers: { Authorization: "Bearer " + user.token },
           })
           .then(function (response) {
             resolve(response);
