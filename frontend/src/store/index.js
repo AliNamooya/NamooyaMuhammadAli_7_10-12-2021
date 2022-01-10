@@ -68,6 +68,9 @@ const store = createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
+    postInfos: function (state, postInfos) {
+      state.postInfos = postInfos;
+    },
     logout: function (state) {
       state.user = {
         userId: -1,
@@ -129,7 +132,7 @@ const store = createStore({
           headers: { Authorization: "Bearer " + user.token },
         })
         .then(function (response) {
-          commit("userInfos", "postInfos", response.data);
+          commit("postInfos", response.data);
         })
         .catch(function () {});
     },

@@ -1,8 +1,10 @@
 <template>
   <section>
-    <div class="card">
+    <div class="card" v-for="p in post" :key="p">
       <div class="card_top">
-        <h2>UsernameTest</h2>
+        <!-- <h2>{{ p.User.username }}</h2>  ca crash lorsque je reload la page -->
+        <h2>{{ p.User }}</h2>
+        <!-- v-if="admin == true || user.userId == this.$store.state.user.userId" -->
         <div class="delete">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -18,13 +20,10 @@
           </svg>
         </div>
       </div>
-      <h3 class="card__title">Titre du commentaire</h3>
-      <!-- <img src="" alt="photo" /> -->
+      <h3 class="card__title">{{ p.title }}</h3>
+      <img :src="p.attachement" alt="photo" />
       <p class="card__subtitle">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent
-        accumsan nisi quis rutrum feugiat. Phasellus pharetra sem eros, non
-        congue lorem faucibus sit amet. Phasellus tincidunt lorem lorem, et
-        dapibus augue imperdiet vitae.
+        {{ p.content }}
       </p>
     </div>
   </section>
