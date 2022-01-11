@@ -47,7 +47,7 @@ const store = createStore({
     },
 
     postInfos: {
-      id: "",
+      id: "", //remplacer par postId
       title: "",
       content: "",
       attachement: "",
@@ -148,12 +148,12 @@ const store = createStore({
         .catch(function () {});
     },
 
-    // status 403 (Forbidden), network = unauthorized request
-    createPost: ({ commit }) => {
-      commit;
+    //Ca fonctionne
+    createPost: ({ commit }, postInfos) => {
       return new Promise((resolve, reject) => {
+        commit;
         postsAPI
-          .post("/create", {
+          .post("/create", postInfos, {
             headers: { Authorization: "Bearer " + user.token },
           })
           .then(function (response) {
@@ -166,7 +166,7 @@ const store = createStore({
     },
 
     // deletePost: (postId) => {
-    //   postsAPI.delete("/" + postId).then((response) => {
+    //   postsAPI.delete("/" + user.postId).then((response) => {
     //     this.result.splice(postId);
     //     console.log(this.result);
     //   });

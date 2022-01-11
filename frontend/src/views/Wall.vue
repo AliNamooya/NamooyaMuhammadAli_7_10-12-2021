@@ -1,19 +1,20 @@
 <template>
   <div id="wall">
     <Header />
+    <NewPost />
     <FeedComment />
   </div>
 </template>
 
 <script>
 import Header from "../components/Header.vue";
-
+import NewPost from "../components/NewPost.vue";
 import FeedComment from "../components/FeedComment.vue";
 export default {
   name: "Wall",
   components: {
     Header,
-
+    NewPost,
     FeedComment,
   },
 };

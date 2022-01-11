@@ -2,9 +2,21 @@
   <section>
     <div class="card" v-for="p in post" :key="p">
       <div class="card_top">
-        <!-- <h2>{{ p.User.username }}</h2>  ca crash lorsque je reload la page -->
         <h2>{{ p.User }}</h2>
-        <!-- v-if="admin == true || user.userId == this.$store.state.user.userId" -->
+        <!-- <div  v-if="p.User.isAdmin === true" class="delete">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-x"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </div> -->
       </div>
       <h3 class="card__title">{{ p.title }}</h3>
       <img :src="p.attachement" alt="photo" />

@@ -3,7 +3,7 @@
     <!-- <img src="" alt=""> -->
     <div class="form-row">
       <input
-        v-model="title"
+        v-model="postInfos.title"
         class="form-row__input"
         type="text"
         placeholder="Titre"
@@ -12,7 +12,7 @@
 
     <div class="form-row">
       <input
-        v-model="content"
+        v-model="postInfos.content"
         class="form-row__input"
         type="text"
         placeholder="Commentaire"
@@ -38,12 +38,11 @@
       </button>
     </div>
 
-    <button @click="postComment()" class="button">Poster</button>
+    <button @click="addNewPost()" class="button">Poster</button>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
   name: "NewPost",
   // computed: {
@@ -58,22 +57,20 @@ export default {
   //}
   data: function () {
     return {
-      title: "",
-      content: "",
+      postInfos: {
+        title: "",
+        content: "",
+        attachement: "",
+      },
     };
   },
-  computed: {
-    ...mapState({
-      user: "userInfos",
-      post: "postInfos",
-    }),
-  },
+
   methods: {
-    postComment: function () {
+    addNewPost: function () {
       this.$store
         .dispatch("createPost", {
-          title: this.title,
-          content: this.content,
+          title: this.postInfos.title,
+          content: this.postInfos.content,
           // attachement: this.attachement
         })
         .then(

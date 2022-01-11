@@ -31,7 +31,7 @@ exports.create = (req, res) => {
             title: title,
             content: content,
             attachement: attachmentURL,
-            likes: 0,
+            likes: 0, //enlever
             UserId: user.id,
           })
             .then((newPost) => {
@@ -57,8 +57,9 @@ exports.showUserPost = (req, res) => {
     include: {
       where: { id: userId },
       model: models.User,
-      attributes: ["username"], //on affiche le username de celui qui a crée le post
+      attributes: ["username", "isAdmin"], //on affiche le username de celui qui a crée le post
     },
+    order: [["createdAt", "DESC"]],
   })
     .then((result) => {
       if (result) {
@@ -83,7 +84,7 @@ exports.listMsg = (req, res) => {
     include: [
       {
         model: models.User,
-        attributes: ["username"],
+        attributes: ["username", "isAdmin"],
       },
     ],
     order: [["createdAt", "DESC"]],

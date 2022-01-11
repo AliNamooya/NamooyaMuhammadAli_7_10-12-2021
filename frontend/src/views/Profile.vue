@@ -4,8 +4,28 @@
     <div class="card">
       <h1 class="card__title">Espace Perso de : {{ user.username }}</h1>
       <p class="card__subtitle">Mon adresse mail est : {{ user.email }}</p>
+      <p v-if="user.isAdmin == true" class="card__subtitle">
+        J'ai des droits administrateur
+      </p>
+      <div class="deleteBtn">
+        <button type="button" class="button-delete btn-primary">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-trash-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"
+            ></path>
+          </svg>
+          Supprimer mon compte
+        </button>
+      </div>
     </div>
-    <NewPost />
+
     <ProfileComment />
   </div>
 </template>
@@ -13,14 +33,12 @@
 <script>
 import { mapState } from "vuex";
 import Header from "../components/Header.vue";
-import NewPost from "../components/NewPost.vue";
 import ProfileComment from "../components/ProfileComment.vue";
 
 export default {
   name: "Profile",
   components: {
     Header,
-    NewPost,
     ProfileComment,
   },
   mounted: function () {
@@ -61,5 +79,26 @@ export default {
   width: 100%;
   background-image: linear-gradient(62deg, #fbab7e 0%, #f7ce68 100%);
   min-height: 100vh;
+}
+
+svg {
+  margin-right: 5px;
+}
+
+.button-delete {
+  background: #eb4c1be9;
+  color: white;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 15px;
+  border: none;
+  width: 60%;
+  padding: 16px;
+  transition: 0.4s background-color;
+}
+
+.deleteBtn {
+  display: flex;
+  justify-content: center;
 }
 </style>
