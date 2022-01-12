@@ -19,23 +19,13 @@
       />
     </div>
 
-    <div class="add_image">
-      <button type="button" class="button btn-primary">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-image"
-          viewBox="0 0 16 16"
-        >
-          <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path>
-          <path
-            d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"
-          ></path>
-        </svg>
-        Importer une image
-      </button>
+    <div class="form-row">
+      <input
+        class="form-row__input"
+        type="file"
+        placeholder="Image"
+        @change="addImage"
+      />
     </div>
 
     <button @click="addNewPost()" class="button">Poster</button>
@@ -66,15 +56,21 @@ export default {
   },
 
   methods: {
+    addImage(event) {
+      console.log(event);
+      this.attachement = event.target.files[0];
+    },
+
     addNewPost: function () {
       this.$store
         .dispatch("createPost", {
           title: this.postInfos.title,
           content: this.postInfos.content,
-          // attachement: this.attachement
+          attachement: "",
         })
         .then(
           function (response) {
+            window.location.reload();
             console.log(response);
           },
           function (error) {

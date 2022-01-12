@@ -8,7 +8,11 @@
         J'ai des droits administrateur
       </p>
       <div class="deleteBtn">
-        <button type="button" class="button-delete btn-primary">
+        <button
+          @click="deleteUserAccount()"
+          type="button"
+          class="button-delete btn-primary"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -26,20 +30,24 @@
       </div>
     </div>
 
-    <ProfileComment />
+    <ProfilePosts />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Header from "../components/Header.vue";
-import ProfileComment from "../components/ProfileComment.vue";
+import ProfilePosts from "../components/ProfilePosts.vue";
+const axios = require("axios");
+const usersAPI = axios.create({
+  baseURL: "http://localhost:3000/api/user",
+});
 
 export default {
   name: "Profile",
   components: {
     Header,
-    ProfileComment,
+    ProfilePosts,
   },
   mounted: function () {
     console.log(this.$store.state.user); //renvoie le userId et le token
@@ -57,6 +65,19 @@ export default {
     }),
   },
   methods: {
+    deleteUserAccount() {
+      //il faut utiliser self car c'est dans un sous ensemble
+      const self = this;
+      usersAPI
+        .delete("/delete", {
+          headers: { Authorization: "Bearer " + this.$store.state.user.token },
+        })
+        .then(() => {
+          console.log("deleted");
+          self.$store.commit("logout");
+          self.$router.push("/");
+        });
+    },
     // fontion liée au bouton deconnexion
     logout: function () {
       this.$store.commit("logout");

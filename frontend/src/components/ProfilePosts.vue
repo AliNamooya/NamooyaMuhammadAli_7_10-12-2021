@@ -5,7 +5,7 @@
         <!-- <h2>{{ p.User.username }}</h2>  ca crash lorsque je reload la page -->
         <h2>{{ p.User }}</h2>
         <!-- v-if="admin == true || user.userId == this.$store.state.user.userId" -->
-        <div class="delete">
+        <div class="delete" @click="deletePost(p.id)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -21,7 +21,7 @@
         </div>
       </div>
       <h3 class="card__title">{{ p.title }}</h3>
-      <img :src="p.attachement" alt="photo" />
+      <img v-if="p.attachement != null" :src="p.attachement" alt="photo" />
       <p class="card__subtitle">
         {{ p.content }}
       </p>
@@ -31,8 +31,12 @@
 
 <script>
 import { mapState } from "vuex";
+const axios = require("axios");
+const postsAPI = axios.create({
+  baseURL: "http://localhost:3000/api/post",
+});
 export default {
-  name: "ProfileComment",
+  name: "ProfilePosts",
 
   mounted: function () {
     console.log(this.$store.state.user);
@@ -42,6 +46,20 @@ export default {
     }
     this.$store.dispatch("getUserPosts");
   },
+  methods: {
+    deletePost(id) {
+      postsAPI
+        .delete("/" + id, {
+          headers: { Authorization: "Bearer " + this.$store.state.user.token },
+        })
+        .then(() => {
+          //ca rafraichit immediatement la page apres avoir supprimer un post
+          this.$store.dispatch("getUserPosts");
+        });
+    },
+    // this.$store.state.user.token
+  },
+
   computed: {
     ...mapState({
       post: "postInfos",

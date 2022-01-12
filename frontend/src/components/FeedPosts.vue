@@ -19,7 +19,7 @@
         </div> -->
       </div>
       <h3 class="card__title">{{ p.title }}</h3>
-      <img :src="p.attachement" alt="photo" />
+      <img v-if="p.attachement != null" :src="p.attachement" alt="photo" />
       <p class="card__subtitle">
         {{ p.content }}
       </p>
@@ -30,7 +30,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  name: "FeedComment",
+  name: "FeedPosts",
 
   mounted: function () {
     console.log(this.$store.state.user);

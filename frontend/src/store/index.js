@@ -164,13 +164,6 @@ const store = createStore({
           });
       });
     },
-
-    // deletePost: (postId) => {
-    //   postsAPI.delete("/" + user.postId).then((response) => {
-    //     this.result.splice(postId);
-    //     console.log(this.result);
-    //   });
-    // },
   },
   modules: {},
 });
