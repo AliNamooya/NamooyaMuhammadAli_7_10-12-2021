@@ -74,7 +74,7 @@ export default {
         })
         .then(() => {
           console.log("deleted");
-          self.$store.commit("logout");
+
           self.$router.push("/");
         });
     },

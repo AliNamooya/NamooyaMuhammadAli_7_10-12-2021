@@ -1,21 +1,13 @@
 <template>
   <div class="card">
     <!-- <img src="" alt=""> -->
-    <div class="form-row">
-      <input
-        v-model="postInfos.title"
-        class="form-row__input"
-        type="text"
-        placeholder="Titre"
-      />
-    </div>
 
     <div class="form-row">
       <input
         v-model="postInfos.content"
         class="form-row__input"
         type="text"
-        placeholder="Commentaire"
+        placeholder="Quoi de neuf ?"
       />
     </div>
 
@@ -48,7 +40,6 @@ export default {
   data: function () {
     return {
       postInfos: {
-        title: "",
         content: "",
         attachement: "",
       },
@@ -61,19 +52,18 @@ export default {
       this.attachement = event.target.files[0];
     },
 
-    addNewPost: function () {
+    addNewPost() {
       this.$store
         .dispatch("createPost", {
-          title: this.postInfos.title,
           content: this.postInfos.content,
-          attachement: "",
+          attachement: this.attachement,
         })
         .then(
-          function (response) {
-            window.location.reload();
+          (response) => {
+            this.$store.dispatch("getAllPosts");
             console.log(response);
           },
-          function (error) {
+          (error) => {
             console.log(error);
           }
         );

@@ -26,6 +26,7 @@ if (!user) {
   try {
     user = JSON.parse(user);
     usersAPI.defaults.headers.common["Authorization"] = "Bearer " + user.token;
+    postsAPI.defaults.headers.common["Authorization"] = "Bearer " + user.token;
   } catch (ex) {
     user = {
       userId: -1,
@@ -44,11 +45,11 @@ const store = createStore({
       userId: "",
       email: "",
       username: "",
+      isAdmin: false,
     },
 
     postInfos: {
-      id: "", //remplacer par postId
-      title: "",
+      id: "",
       content: "",
       attachement: "",
     },
@@ -60,6 +61,8 @@ const store = createStore({
 
     logUser: function (state, user) {
       usersAPI.defaults.headers.common["Authorization"] =
+        "Bearer " + user.token;
+      postsAPI.defaults.headers.common["Authorization"] =
         "Bearer " + user.token;
       //le token et userId sont inserer dans le localstorage
       localStorage.setItem("user", JSON.stringify(user));
@@ -128,9 +131,7 @@ const store = createStore({
     //status 403 unauthorized request, il manque l'autorisation des headers
     getAllPosts: ({ commit }) => {
       postsAPI
-        .get("/", {
-          headers: { Authorization: "Bearer " + user.token },
-        })
+        .get("/")
         .then(function (response) {
           commit("postInfos", response.data);
         })
@@ -139,9 +140,7 @@ const store = createStore({
 
     getUserPosts: ({ commit }) => {
       postsAPI
-        .get("/" + user.userId, {
-          headers: { Authorization: "Bearer " + user.token },
-        })
+        .get("/" + user.userId)
         .then(function (response) {
           commit("postInfos", response.data);
         })
@@ -152,10 +151,11 @@ const store = createStore({
     createPost: ({ commit }, postInfos) => {
       return new Promise((resolve, reject) => {
         commit;
+        let formData = new FormData();
+        formData.append("content", postInfos.content);
+        formData.append("attachement", postInfos.attachement);
         postsAPI
-          .post("/create", postInfos, {
-            headers: { Authorization: "Bearer " + user.token },
-          })
+          .post("/create", formData)
           .then(function (response) {
             resolve(response);
           })

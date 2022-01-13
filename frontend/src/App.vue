@@ -49,7 +49,7 @@ img {
   width: 540px;
   background: white;
   border-radius: 16px;
-  padding: 32px;
+  padding: 10px 32px 10px 32px;
 }
 .card__title {
   text-align: center;

@@ -4,10 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     "Post",
     {
       userId: DataTypes.INTEGER,
-      title: DataTypes.STRING,
       content: DataTypes.STRING,
       attachement: DataTypes.STRING,
-      likes: DataTypes.INTEGER,
     },
     {}
   );
@@ -18,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
+    models.User.hasMany(models.Comments);
   };
   return Post;
 };

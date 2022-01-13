@@ -3,7 +3,8 @@
     <div class="card" v-for="p in post" :key="p">
       <div class="card_top">
         <h2>{{ p.User }}</h2>
-        <!-- <div  v-if="p.User.isAdmin === true" class="delete">
+
+        <div v-if="user.isAdmin" class="delete">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -16,13 +17,21 @@
               d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
             />
           </svg>
-        </div> -->
+        </div>
       </div>
-      <h3 class="card__title">{{ p.title }}</h3>
       <img v-if="p.attachement != null" :src="p.attachement" alt="photo" />
       <p class="card__subtitle">
         {{ p.content }}
       </p>
+
+      <div class="form-row">
+        <input
+          v-model="content"
+          class="form-row__input"
+          type="text"
+          placeholder="Ajoutez un commentaire"
+        />
+      </div>
     </div>
   </section>
 </template>
@@ -34,6 +43,7 @@ export default {
 
   mounted: function () {
     console.log(this.$store.state.user);
+
     if (this.$store.state.user.userId == -1) {
       this.$router.push("/");
       return;
@@ -43,7 +53,7 @@ export default {
   computed: {
     ...mapState({
       post: "postInfos",
-      user: "userInfos",
+      user: "user",
     }),
   },
 };
@@ -59,7 +69,6 @@ section {
 }
 .card {
   margin-bottom: 20px;
-  padding-top: 10px;
 }
 
 .card_top {
@@ -67,10 +76,17 @@ section {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 h2 {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+p {
+  color: black;
+  font-size: 1.1rem;
 }
 
 svg {

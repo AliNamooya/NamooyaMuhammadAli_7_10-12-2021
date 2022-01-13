@@ -20,8 +20,8 @@
           </svg>
         </div>
       </div>
-      <h3 class="card__title">{{ p.title }}</h3>
       <img v-if="p.attachement != null" :src="p.attachement" alt="photo" />
+
       <p class="card__subtitle">
         {{ p.content }}
       </p>
@@ -79,7 +79,6 @@ section {
 }
 .card {
   margin-bottom: 20px;
-  padding-top: 10px;
 }
 
 .card_top {
@@ -90,9 +89,14 @@ section {
 }
 
 h2 {
-  font-size: 1rem;
+  font-size: 0.9rem;
+  color: #666;
 }
 
+p {
+  color: black;
+  font-size: 1.1rem;
+}
 svg {
   color: red;
   width: 40px;

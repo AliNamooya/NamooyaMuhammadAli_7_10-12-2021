@@ -2,7 +2,6 @@ const models = require("../models");
 const utils = require("../middleware/jwtUtils");
 const fs = require("fs");
 
-//attachement ne fonctionne pas
 exports.create = (req, res) => {
   //Declaration de l'url de l'image
   let attachmentURL;
@@ -16,7 +15,7 @@ exports.create = (req, res) => {
       if (user !== null) {
         //Récupération du corps du post
         let content = req.body.content;
-        let title = req.body.title;
+
         if (req.file != null) {
           attachmentURL = `${req.protocol}://${req.get("host")}/images/${
             req.file.filename
@@ -28,10 +27,9 @@ exports.create = (req, res) => {
           res.status(400).json({ error: "Rien à publier" });
         } else {
           models.Post.create({
-            title: title,
             content: content,
             attachement: attachmentURL,
-            likes: 0, //enlever
+
             UserId: user.id,
           })
             .then((newPost) => {
@@ -125,15 +123,14 @@ exports.update = async (req, res) => {
           });
         }
       } // if a new message is in the request
-      if (req.body.title && req.body.content) {
-        post.title = req.body.title;
+      if (req.body.content) {
         post.content = req.body.content;
       }
 
       post.attachement = newAttachementURL;
       // then we save everything in database
       const newPost = await post.save({
-        fields: ["title", "content", "attachement"],
+        fields: ["content", "attachement"],
       });
       res.status(200).json({ newPost: newPost, message: "post modifié" });
     } else {
