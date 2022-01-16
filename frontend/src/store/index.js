@@ -52,6 +52,7 @@ const store = createStore({
       userId: "",
       email: "",
       username: "",
+      attachement: "",
       isAdmin: false,
     },
     //sert de stockage pour les datas de l'api
@@ -148,6 +149,23 @@ const store = createStore({
         })
         .catch(function () {});
     },
+
+    updateUserInfos: ({ commit }, userInfos) => {
+      console.log(userInfos.username);
+      commit;
+      let formData = new FormData();
+      formData.append("username", userInfos.username);
+      formData.append("attachement", userInfos.attachement);
+      usersAPI
+        .put("/me", formData)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
     //---------------------POST-----------------------------
 
     getAllPosts: ({ commit }) => {

@@ -2,7 +2,10 @@
   <section>
     <div class="card" v-for="p in post" :key="p">
       <div class="card_top">
-        <h2>{{ p.User }}</h2>
+        <div class="card_top_left">
+          <!-- <img :src="p.User" alt="Avatar" class="avatar" /> -->
+          <!-- <h2>{{ p.User }}</h2> -->
+        </div>
 
         <div v-if="user.isAdmin" class="delete" @click="deletePost(p.id)">
           <svg
@@ -55,7 +58,10 @@
       <div class="comment" v-for="c in comments" :key="c">
         <div v-if="c.postId == p.id" class="card comment-style">
           <div class="card_top">
-            <h2>{{ c.User }}</h2>
+            <div class="card_top_left">
+              <!-- <img :src="c.User" alt="Avatar" class="avatar" /> -->
+              <!-- <h2>{{ c.User }}</h2> -->
+            </div>
 
             <div
               v-if="user.isAdmin || c.userId == user.userId"

@@ -55,17 +55,17 @@ exports.showUserPost = (req, res) => {
     include: {
       where: { id: userId },
       model: models.User,
-      attributes: ["username", "isAdmin"], //on affiche le username de celui qui a crée le post
+      attributes: ["username", "attachement", "isAdmin"], //on affiche le username de celui qui a crée le post
     },
     order: [["createdAt", "DESC"]],
   })
     .then((result) => {
-      if (result) {
+      if (result != null) {
         //on affiche le resultat des requetes ici
         res.status(200).json(result);
       } else {
         res.status(404).json({
-          message: "User's comments not found!",
+          message: "Pas de post a afficher",
         });
       }
     })
@@ -82,13 +82,13 @@ exports.listMsg = (req, res) => {
     include: [
       {
         model: models.User,
-        attributes: ["username", "isAdmin"],
+        attributes: ["username", "attachement", "isAdmin"],
       },
     ],
     order: [["createdAt", "DESC"]],
   })
     .then((posts) => {
-      if (posts.length > null) {
+      if (posts != null) {
         res.status(200).json(posts);
       } else {
         res.status(404).json({ error: "Pas de post à afficher" });

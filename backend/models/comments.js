@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
       postId: DataTypes.INTEGER,
       content: DataTypes.STRING,
-      attachement: DataTypes.STRING,
     },
     {}
   );

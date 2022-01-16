@@ -113,4 +113,18 @@ img {
   color: #aaaaaa;
   text-align: center;
 }
+
+.card_top_left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.avatar {
+  vertical-align: middle;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
 </style>

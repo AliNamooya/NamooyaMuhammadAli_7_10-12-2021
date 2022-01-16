@@ -83,13 +83,61 @@ exports.login = (req, res) => {
 
 //Profil d'un user
 exports.userProfil = (req, res) => {
-  let id = utils.getUserId(req.headers.authorization);
+  let userId = utils.getUserId(req.headers.authorization);
   models.User.findOne({
-    attributes: ["id", "email", "username", "isAdmin"],
-    where: { id: id },
+    attributes: ["id", "email", "username", "attachement", "isAdmin"],
+    where: { id: userId },
   })
     .then((user) => res.status(200).json(user))
     .catch((error) => res.status(500).json(error));
+};
+
+//modification username + photo
+exports.updateUser = async (req, res) => {
+  try {
+    // try to find this post by his Id
+    let newAttachementURL;
+    const userId = utils.getUserId(req.headers.authorization);
+    let user = await models.User.findOne({ where: { id: userId } });
+    if (userId == user.id) {
+      if (req.file != null) {
+        newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`;
+        // if an image was already in database
+        if (user.attachement) {
+          const filename = user.attachement.split("/images")[1];
+          // delete it from the "images" file
+          fs.unlink(`images/${filename}`, (err) => {
+            if (err) console.log(err);
+            else {
+              console.log(`Deleted file: images/${filename}`);
+            }
+          });
+        }
+      }
+      // if a file is in the request
+      if (req.file != null) {
+        newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`;
+      } // if a new message is in the request
+      if (req.body.username) {
+        user.username = req.body.username;
+      }
+
+      user.attachement = newAttachementURL;
+      // then we save everything in database
+      const newUser = await user.save({
+        fields: ["username", "attachement"],
+      });
+      res.status(200).json({ newUser: newUser, message: "user modifié" });
+    } else {
+      res.status(400).json({ message: "Vous n'avez pas les droits requis" });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
 
 //Suppression d'un compte
@@ -125,4 +173,5 @@ exports.deleteProfile = (req, res) => {
       error: "Impossible de supprimer ce compte, contacter un administrateur",
     });
   }
+  //rajouter la suppresion des commentaires liée au userID aussi
 };

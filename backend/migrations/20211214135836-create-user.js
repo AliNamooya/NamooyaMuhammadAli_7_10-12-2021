@@ -20,6 +20,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      attachement: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
       isAdmin: {
         allowNull: false,
         type: Sequelize.BOOLEAN,

@@ -31,12 +31,12 @@ exports.listComment = (req, res) => {
     include: [
       {
         model: models.User,
-        attributes: ["username", "isAdmin"],
+        attributes: ["username", "attachement", "isAdmin"],
       },
     ],
   })
     .then((comments) => {
-      if (comments.length > null) {
+      if (comments != null) {
         res.status(200).json(comments);
       } else {
         res.status(404).json({ error: "Pas de commentaires à afficher" });
@@ -58,8 +58,9 @@ exports.postsComment = (req, res) => {
     },
   })
     .then((result) => {
-      if (result) {
+      if (result != null) {
         //on affiche le resultat des requetes ici
+
         res.status(200).json(result);
       } else {
         res.status(404).json({
