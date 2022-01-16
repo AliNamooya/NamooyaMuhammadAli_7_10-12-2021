@@ -4,7 +4,7 @@
       <div class="card_top">
         <h2>{{ p.User }}</h2>
 
-        <div v-if="user.isAdmin" class="delete">
+        <div v-if="user.isAdmin" class="delete" @click="deletePost(p.id)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -26,11 +26,59 @@
 
       <div class="form-row">
         <input
-          v-model="content"
+          v-model="commentInfos.content"
           class="form-row__input"
           type="text"
           placeholder="Ajoutez un commentaire"
         />
+        <span
+          class="input-group-text"
+          id="basic-addon1"
+          @click="addNewComment(p.id)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-send-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89.471-1.178-1.178.471L5.93 9.363l.338.215a.5.5 0 0 1 .154.154l.215.338 7.494-7.494Z"
+            ></path>
+          </svg>
+        </span>
+      </div>
+
+      <div class="comment" v-for="c in comments" :key="c">
+        <div v-if="c.postId == p.id" class="card comment-style">
+          <div class="card_top">
+            <h2>{{ c.User }}</h2>
+
+            <div
+              v-if="user.isAdmin || c.userId == user.userId"
+              class="delete"
+              @click="deleteComment(c.id)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-x"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <p class="card__subtitle">{{ c.content }}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -38,22 +86,76 @@
 
 <script>
 import { mapState } from "vuex";
+const axios = require("axios");
+const postsAPI = axios.create({
+  baseURL: "http://localhost:3000/api/post",
+});
+//base lien api comments
+const commentsAPI = axios.create({
+  baseURL: "http://localhost:3000/api/comment",
+});
 export default {
   name: "FeedPosts",
+  data: function () {
+    return {
+      commentInfos: {
+        content: "",
+      },
+    };
+  },
 
   mounted: function () {
-    console.log(this.$store.state.user);
-
     if (this.$store.state.user.userId == -1) {
       this.$router.push("/");
       return;
     }
     this.$store.dispatch("getAllPosts");
+
+    this.$store.dispatch("getAllComments");
+  },
+  methods: {
+    addNewComment(id) {
+      let formData = new FormData();
+      formData.append("content", this.commentInfos.content);
+      commentsAPI
+        .post("/create/" + id, formData, {
+          headers: {
+            Authorization: "Bearer " + this.$store.state.user.token,
+          },
+        })
+        .then(() => {
+          this.$store.dispatch("getAllComments");
+        });
+    },
+
+    deletePost(id) {
+      postsAPI
+        .delete("/" + id, {
+          headers: { Authorization: "Bearer " + this.$store.state.user.token },
+        })
+        .then(() => {
+          //ca rafraichit immediatement la page apres avoir supprimer un post
+          this.$store.dispatch("getUserPosts");
+        });
+    },
+
+    deleteComment(id) {
+      commentsAPI
+        .delete("/" + id, {
+          headers: { Authorization: "Bearer " + this.$store.state.user.token },
+        })
+        .then(() => {
+          //rafaichir les comments
+          this.$store.dispatch("getAllComments");
+        });
+    },
+    // this.$store.state.user.token
   },
   computed: {
     ...mapState({
       post: "postInfos",
       user: "user",
+      comments: "commentInfos",
     }),
   },
 };
@@ -89,7 +191,7 @@ p {
   font-size: 1.1rem;
 }
 
-svg {
+.bi-x {
   color: red;
   width: 40px;
   height: 40px;
@@ -116,5 +218,13 @@ img {
 
 .bi-hand-thumbs-up {
   color: white;
+}
+
+.comment-style {
+  background-color: rgba(128, 128, 128, 0.255);
+}
+
+.input-group-text {
+  cursor: pointer;
 }
 </style>

@@ -154,10 +154,12 @@ exports.delete = async (req, res) => {
         const filename = post.attachement.split("/images/")[1];
         fs.unlink(`images/${filename}`, () => {
           models.Post.destroy({ where: { id: post.id } });
+          models.Comments.destroy({ where: { PostId: post.id } });
           res.status(200).json({ message: "Post supprimé" });
         });
       } else {
         models.Post.destroy({ where: { id: post.id } });
+        models.Comments.destroy({ where: { PostId: post.id } });
         res.status(200).json({ message: "Post supprimé" });
       }
     } else {

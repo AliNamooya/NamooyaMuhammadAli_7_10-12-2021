@@ -12,6 +12,11 @@ const postsAPI = axios.create({
   baseURL: "http://localhost:3000/api/post",
 });
 
+//base lien api comments
+const commentsAPI = axios.create({
+  baseURL: "http://localhost:3000/api/comment",
+});
+
 //-------------------------------------
 
 let user = localStorage.getItem("user"); //récupération du token
@@ -27,6 +32,8 @@ if (!user) {
     user = JSON.parse(user);
     usersAPI.defaults.headers.common["Authorization"] = "Bearer " + user.token;
     postsAPI.defaults.headers.common["Authorization"] = "Bearer " + user.token;
+    commentsAPI.defaults.headers.common["Authorization"] =
+      "Bearer " + user.token;
   } catch (ex) {
     user = {
       userId: -1,
@@ -40,18 +47,23 @@ const store = createStore({
   state: {
     status: "",
     user: user,
-
+    //sert de stockage pour les datas de l'api
     userInfos: {
       userId: "",
       email: "",
       username: "",
       isAdmin: false,
     },
-
+    //sert de stockage pour les datas de l'api
     postInfos: {
       id: "",
       content: "",
       attachement: "",
+    },
+    //sert de stockage pour les datas de l'api
+    commentInfos: {
+      id: "",
+      content: "",
     },
   },
   mutations: {
@@ -64,15 +76,24 @@ const store = createStore({
         "Bearer " + user.token;
       postsAPI.defaults.headers.common["Authorization"] =
         "Bearer " + user.token;
+      commentsAPI.defaults.headers.common["Authorization"] =
+        "Bearer " + user.token;
+
       //le token et userId sont inserer dans le localstorage
       localStorage.setItem("user", JSON.stringify(user));
       state.user = user;
     },
+    //met a jour les données stocker du state
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
+    //met a jour les données stocker du state
     postInfos: function (state, postInfos) {
       state.postInfos = postInfos;
+    },
+    //met a jour les données stocker du state
+    commentInfos: function (state, commentInfos) {
+      state.commentInfos = commentInfos;
     },
     logout: function (state) {
       state.user = {
@@ -118,7 +139,7 @@ const store = createStore({
     },
 
     // afficher les informations de l'utilisateur
-    //CA FONCTIOOONNNNEEEEEEEEEEEEEEE
+
     getUserInfos: ({ commit }) => {
       usersAPI
         .get("/me")
@@ -128,7 +149,7 @@ const store = createStore({
         .catch(function () {});
     },
     //---------------------POST-----------------------------
-    //status 403 unauthorized request, il manque l'autorisation des headers
+
     getAllPosts: ({ commit }) => {
       postsAPI
         .get("/")
@@ -147,7 +168,6 @@ const store = createStore({
         .catch(function () {});
     },
 
-    //Ca fonctionne
     createPost: ({ commit }, postInfos) => {
       return new Promise((resolve, reject) => {
         commit;
@@ -163,6 +183,17 @@ const store = createStore({
             reject(error);
           });
       });
+    },
+
+    //---------------------Commentaire-----------------------------
+
+    getAllComments: ({ commit }) => {
+      commentsAPI
+        .get("/")
+        .then(function (response) {
+          commit("commentInfos", response.data);
+        })
+        .catch(function () {});
     },
   },
   modules: {},

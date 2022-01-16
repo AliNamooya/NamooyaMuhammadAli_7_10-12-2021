@@ -50,7 +50,6 @@ export default {
     ProfilePosts,
   },
   mounted: function () {
-    console.log(this.$store.state.user); //renvoie le userId et le token
     //on se deconnect automatiquement si le user n'a pas de compte
     if (this.$store.state.user.userId == -1) {
       this.$router.push("/");

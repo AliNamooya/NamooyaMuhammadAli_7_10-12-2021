@@ -48,7 +48,6 @@ export default {
 
   methods: {
     addImage(event) {
-      console.log(event);
       this.attachement = event.target.files[0];
     },
 

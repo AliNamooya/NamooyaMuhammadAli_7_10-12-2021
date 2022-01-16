@@ -82,13 +82,13 @@ export default {
       password: "",
     };
   },
-  //Si on se deconnect pas, on peut pas aller sur login
-  // mounted: function () {
-  //   if (this.$store.state.user.userId != -1) {
-  //     this.$router.push("/profile");
-  //     return;
-  //   }
-  // },
+  //Si on se deconnect pas, on peut pas aller sur la page login
+  mounted: function () {
+    if (this.$store.state.user.userId != -1) {
+      this.$router.push("/wall");
+      return;
+    }
+  },
   computed: {
     validatedFields: function () {
       if (this.mode == "create") {
