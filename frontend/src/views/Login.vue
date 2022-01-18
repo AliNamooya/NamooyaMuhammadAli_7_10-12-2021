@@ -41,13 +41,14 @@
         Adresse mail et/ou mot de passe invalide
       </div>
       <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
-        Adresse mail déjà utilisée
+        Adresse mail déjà utilisée ou non conforme
       </div>
       <div class="form-row">
         <button
           @click="login()"
           class="button"
           :class="{ 'button--disabled': !validatedFields }"
+          :disabled="!validatedFields"
           v-if="mode == 'login'"
         >
           <span v-if="status == 'loading'">Connexion en cours...</span>
@@ -59,6 +60,7 @@
           @click="createAccount()"
           class="button"
           :class="{ 'button--disabled': !validatedFields }"
+          :disabled="!validatedFields"
           v-else
         >
           <span v-if="status == 'loading'">Création en cours...</span>

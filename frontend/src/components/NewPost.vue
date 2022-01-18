@@ -20,23 +20,21 @@
       />
     </div>
 
-    <button @click="addNewPost()" class="button">Poster</button>
+    <button
+      :class="{ 'button--disabled': !validatedFields }"
+      :disabled="!validatedFields"
+      @click="addNewPost()"
+      class="button"
+    >
+      Poster
+    </button>
   </div>
 </template>
 
 <script>
 export default {
   name: "NewPost",
-  // computed: {
-  //   validatedFields: function () {
-  //       if (this.title != "" && this.content != "") {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     }
-  //   },
-  //}
+
   data: function () {
     return {
       postInfos: {
@@ -45,7 +43,15 @@ export default {
       },
     };
   },
-
+  computed: {
+    validatedFields: function () {
+      if (this.postInfos.content != "") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
   methods: {
     addImage(event) {
       this.attachement = event.target.files[0];

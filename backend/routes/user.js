@@ -5,9 +5,10 @@ const userCtrl = require("../controllers/user");
 const auth = require("../middleware/auth");
 const passwordCheck = require("../middleware/passwordCheck");
 const multer = require("../middleware/multer-config");
+const emailCheck = require("../middleware/emailCheck");
 
 //Routage
-router.post("/signup", passwordCheck, userCtrl.signup);
+router.post("/signup", emailCheck, passwordCheck, userCtrl.signup);
 router.post("/login", userCtrl.login);
 router.get("/me", auth, userCtrl.userProfil);
 router.put("/me", auth, multer, userCtrl.updateUser);
