@@ -153,13 +153,19 @@ exports.delete = async (req, res) => {
       if (post.attachement) {
         const filename = post.attachement.split("/images/")[1];
         fs.unlink(`images/${filename}`, () => {
-          models.Post.destroy({ where: { id: post.id } });
-          // models.Comments.destroy({ where: { PostId: post.id } }),
+          models.Comments.destroy({ where: { PostId: post.id } })
+            .then(() => {
+              models.Post.destroy({ where: { id: post.id } });
+            })
+            .catch((err) => res.status(500).json(err));
           res.status(200).json({ message: "Post supprimé" });
         });
       } else {
-        models.Post.destroy({ where: { id: post.id } });
-        // models.Comments.destroy({ where: { PostId: post.id } }),
+        models.Comments.destroy({ where: { PostId: post.id } })
+          .then(() => {
+            models.Post.destroy({ where: { id: post.id } });
+          })
+          .catch((err) => res.status(500).json(err));
         res.status(200).json({ message: "Post supprimé" });
       }
     } else {

@@ -141,37 +141,104 @@ exports.updateUser = async (req, res) => {
 };
 
 //Suppression d'un compte
-exports.deleteProfile = (req, res) => {
-  //récupération de l'id de l'user
-  let userId = utils.getUserId(req.headers.authorization);
-  if (userId != null) {
-    //Recherche sécurité si user existe bien
-    models.User.findOne({
-      where: { id: userId },
-    }).then((user) => {
-      if (user != null) {
-        //Delete de tous les posts de l'user même s'il y en a pas
-        models.Post.destroy({
-          where: { userId: user.id },
+// exports.deleteProfile = (req, res) => {
+//   //récupération de l'id de l'user
+//   let userId = utils.getUserId(req.headers.authorization);
+//   if (userId != null) {
+//     //Recherche sécurité si user existe bien
+//     models.User.findOne({
+//       where: { id: userId },
+//     }).then((user) => {
+//       if (user != null) {
+//         //Delete de tous les posts de l'user même s'il y en a pas
+//         models.Post.destroy({
+//           where: { userId: user.id },
+//         })
+//           .then(() => {
+//             console.log("Tous les posts de ce user ont été supprimé");
+//             //Suppression de l'utilisateur
+//             models.User.destroy({
+//               where: { id: user.id },
+//             })
+//               .then(() => res.end())
+//               .catch((err) => console.log(err));
+//           })
+//           .catch((err) => res.status(500).json(err));
+//       } else {
+//         res.status(401).json({ error: "Ce user n'existe pas" });
+//       }
+//     });
+//   } else {
+//     res.status(500).json({
+//       error: "Impossible de supprimer ce compte, contacter un administrateur",
+//     });
+//   }
+//   //rajouter la suppresion des commentaires liée au userID aussi
+// };
+
+// test Suppression d'un compte --------------------------
+exports.deleteProfile = async (req, res) => {
+  try {
+    //récupération de l'id de l'user
+    let userId = utils.getUserId(req.headers.authorization);
+    if (userId != null) {
+      //Recherche sécurité si user existe bien
+      models.User.findOne({
+        where: { id: userId },
+      })
+        .then((user) => {
+          if (user != null) {
+            if (user.attachement) {
+              const filename = user.attachement.split("/images/")[1];
+              fs.unlink(`images/${filename}`, () => {
+                models.Comments.destroy({ where: { UserId: user.id } })
+                  .then(() => {
+                    models.Post.destroy({
+                      where: { userId: user.id },
+                    });
+                  })
+                  .then(() => {
+                    console.log("Compte supprimé");
+                    //Suppression de l'utilisateur
+                    models.User.destroy({
+                      where: { id: user.id },
+                    })
+                      .then(() => res.end())
+                      .catch((err) => console.log(err));
+                  })
+                  .catch((err) => res.status(500).json(err));
+                res.status(200).json({ message: "User supprimé" });
+              });
+            } else {
+              models.Comments.destroy({ where: { UserId: user.id } })
+                .then(() => {
+                  models.Post.destroy({
+                    where: { userId: user.id },
+                  });
+                })
+                .then(() => {
+                  console.log("Compte supprimé");
+                  //Suppression de l'utilisateur
+                  models.User.destroy({
+                    where: { id: user.id },
+                  })
+                    .then(() => res.end())
+                    .catch((err) => console.log(err));
+                })
+                .catch((err) => res.status(500).json(err));
+              res.status(200).json({ message: "User supprimé" });
+            }
+          } else {
+            res.status(401).json({ error: "Ce user n'existe pas" });
+          }
         })
-          .then(() => {
-            console.log("Tous les posts de ce user ont été supprimé");
-            //Suppression de l'utilisateur
-            models.User.destroy({
-              where: { id: user.id },
-            })
-              .then(() => res.end())
-              .catch((err) => console.log(err));
-          })
-          .catch((err) => res.status(500).json(err));
-      } else {
-        res.status(401).json({ error: "Ce user n'existe pas" });
-      }
-    });
-  } else {
-    res.status(500).json({
-      error: "Impossible de supprimer ce compte, contacter un administrateur",
-    });
+        .catch((err) => res.status(500).json(err));
+    } else {
+      res.status(500).json({
+        error: "Impossible de supprimer ce compte, contacter un administrateur",
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
   }
-  //rajouter la suppresion des commentaires liée au userID aussi
 };
