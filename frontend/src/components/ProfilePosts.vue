@@ -3,10 +3,14 @@
     <div class="card" v-for="p in post" :key="p">
       <div class="card_top">
         <div class="card_top_left">
-          <!-- <img :src="p.User" alt="Avatar" class="avatar" /> -->
-          <!-- <h2>{{ p.User }}</h2> -->
+          <img
+            v-if="p.User && p.User.attachement"
+            :src="p.User && p.User.attachement"
+            alt="Avatar"
+            class="avatar"
+          />
+          <h2>{{ p.User && p.User.username }}</h2>
         </div>
-        <!-- <h2>{{ p.User }}</h2> -->
         <div
           v-if="user.isAdmin || user.id === p.userId"
           class="delete"
@@ -36,8 +40,13 @@
         <div v-if="c.postId == p.id" class="card comment-style">
           <div class="card_top">
             <div class="card_top_left">
-              <!-- <img :src="c.User" alt="Avatar" class="avatar" /> -->
-              <!-- <h2>{{ c.User }}</h2> -->
+              <img
+                v-if="p.User && p.User.attachement"
+                :src="p.User && p.User.attachement"
+                alt="Avatar"
+                class="avatar"
+              />
+              <h2>{{ p.User && p.User.username }}</h2>
             </div>
 
             <div
@@ -85,6 +94,7 @@ export default {
       this.$router.push("/");
       return;
     }
+
     this.$store.dispatch("getUserPosts");
     this.$store.dispatch("getAllComments");
   },
@@ -110,7 +120,6 @@ export default {
           this.$store.dispatch("getAllComments");
         });
     },
-    // this.$store.state.user.token
   },
 
   computed: {

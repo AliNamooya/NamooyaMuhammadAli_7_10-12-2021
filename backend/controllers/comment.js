@@ -13,7 +13,7 @@ exports.createComment = (req, res) => {
       console.log(result);
       res.status(201).json({
         message: "Comment created successfully",
-        post: result, //changer post en comment
+        post: result,
       });
     })
     .catch((error) => {

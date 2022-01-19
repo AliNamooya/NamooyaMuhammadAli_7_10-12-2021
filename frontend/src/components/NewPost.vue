@@ -66,6 +66,8 @@ export default {
         .then(
           (response) => {
             this.$store.dispatch("getAllPosts");
+            this.postInfos.content = "";
+
             console.log(response);
           },
           (error) => {

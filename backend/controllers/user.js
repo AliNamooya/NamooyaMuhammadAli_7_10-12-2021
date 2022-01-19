@@ -95,39 +95,39 @@ exports.userProfil = (req, res) => {
 //modification username + photo
 exports.updateUser = async (req, res) => {
   try {
-    // try to find this post by his Id
+    // chercher le user
     let newAttachementURL;
     const userId = utils.getUserId(req.headers.authorization);
     let user = await models.User.findOne({ where: { id: userId } });
     if (userId == user.id) {
+      // if (req.file != null) {
+      //   newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
+      //     req.file.filename
+      //   }`;
+      //   // si une image est dans la BDD
+      //   if (user.attachement) {
+      //     const filename = user.attachement.split("/images")[1];
+      //     // suppression de l'image dans le dossier "images"
+      //     fs.unlink(`images/${filename}`, (err) => {
+      //       if (err) console.log(err);
+      //       else {
+      //         console.log(`Deleted file: images/${filename}`);
+      //       }
+      //     });
+      //   }
+      // }
+      // si une image a été selectionner
       if (req.file != null) {
         newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`;
-        // if an image was already in database
-        if (user.attachement) {
-          const filename = user.attachement.split("/images")[1];
-          // delete it from the "images" file
-          fs.unlink(`images/${filename}`, (err) => {
-            if (err) console.log(err);
-            else {
-              console.log(`Deleted file: images/${filename}`);
-            }
-          });
-        }
-      }
-      // if a file is in the request
-      if (req.file != null) {
-        newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`;
-      } // if a new message is in the request
+      } // s'il ya un username dans le input
       if (req.body.username) {
         user.username = req.body.username;
       }
 
       user.attachement = newAttachementURL;
-      // then we save everything in database
+      // on sauvegarde tout dans la bdd
       const newUser = await user.save({
         fields: ["username", "attachement"],
       });
@@ -173,8 +173,8 @@ exports.updateUser = async (req, res) => {
 //       error: "Impossible de supprimer ce compte, contacter un administrateur",
 //     });
 //   }
-//   //rajouter la suppresion des commentaires liée au userID aussi
-// };
+//rajouter la suppresion des commentaires liée au userID aussi
+//};
 
 // test Suppression d'un compte --------------------------
 exports.deleteProfile = async (req, res) => {
@@ -188,46 +188,48 @@ exports.deleteProfile = async (req, res) => {
       })
         .then((user) => {
           if (user != null) {
-            if (user.attachement) {
-              const filename = user.attachement.split("/images/")[1];
-              fs.unlink(`images/${filename}`, () => {
-                models.Comments.destroy({ where: { UserId: user.id } })
-                  .then(() => {
-                    models.Post.destroy({
-                      where: { userId: user.id },
-                    });
-                  })
-                  .then(() => {
-                    console.log("Compte supprimé");
-                    //Suppression de l'utilisateur
-                    models.User.destroy({
-                      where: { id: user.id },
-                    })
-                      .then(() => res.end())
-                      .catch((err) => console.log(err));
-                  })
-                  .catch((err) => res.status(500).json(err));
-                res.status(200).json({ message: "User supprimé" });
-              });
-            } else {
-              models.Comments.destroy({ where: { UserId: user.id } })
-                .then(() => {
-                  models.Post.destroy({
-                    where: { userId: user.id },
-                  });
+            // if (user.attachement) {
+            //   const filename = user.attachement.split("/images/")[1];
+            //   fs.unlink(`images/${filename}`, () => {
+            //     models.Comments.destroy({ where: { UserId: user.id } })
+            //       .then(() => {
+            //         models.Post.destroy({
+            //           where: { userId: user.id },
+            //         });
+            //       })
+            //       .then(() => {
+            //         console.log("Compte supprimé");
+            //         //Suppression de l'utilisateur
+            //         models.User.destroy({
+            //           where: { id: user.id },
+            //         })
+            //           .then(() => res.end())
+            //           .catch((err) => console.log(err));
+            //       })
+            //       .catch((err) => res.status(500).json(err));
+            //     res.status(200).json({ message: "User supprimé" });
+            //   });
+            // } else {
+            //suppression des commentaires liées au userId
+            models.Comments.destroy({ where: { UserId: user.id } })
+              .then(() => {
+                //suppression des posts liées au userId
+                models.Post.destroy({
+                  where: { userId: user.id },
+                });
+              })
+              .then(() => {
+                console.log("Compte supprimé");
+                //Suppression de l'utilisateur
+                models.User.destroy({
+                  where: { id: user.id },
                 })
-                .then(() => {
-                  console.log("Compte supprimé");
-                  //Suppression de l'utilisateur
-                  models.User.destroy({
-                    where: { id: user.id },
-                  })
-                    .then(() => res.end())
-                    .catch((err) => console.log(err));
-                })
-                .catch((err) => res.status(500).json(err));
-              res.status(200).json({ message: "User supprimé" });
-            }
+                  .then(() => res.end())
+                  .catch((err) => console.log(err));
+              })
+              .catch((err) => res.status(500).json(err));
+            res.status(200).json({ message: "User supprimé" });
+            // }
           } else {
             res.status(401).json({ error: "Ce user n'existe pas" });
           }

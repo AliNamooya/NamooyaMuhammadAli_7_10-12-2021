@@ -156,7 +156,7 @@ const store = createStore({
       let formData = new FormData();
       formData.append("username", userInfos.username);
       formData.append("attachement", userInfos.attachement);
-      usersAPI
+      return usersAPI
         .put("/me", formData)
         .then(function (response) {
           console.log(response);

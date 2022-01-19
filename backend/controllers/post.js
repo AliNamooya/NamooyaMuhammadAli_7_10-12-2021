@@ -100,21 +100,19 @@ exports.listMsg = (req, res) => {
 //Modification d'un post
 exports.update = async (req, res) => {
   try {
-    // try to find this post by his Id
     let newAttachementURL;
     const userId = utils.getUserId(req.headers.authorization);
     let post = await models.Post.findOne({ where: { id: req.params.id } });
-    // Make sure this user is the owner
+
     if (userId == post.userId) {
-      // if a file is in the request
       if (req.file != null) {
         newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`;
-        // if an image was already in database
+
         if (post.attachement) {
           const filename = post.attachement.split("/images")[1];
-          // delete it from the "images" file
+
           fs.unlink(`images/${filename}`, (err) => {
             if (err) console.log(err);
             else {
@@ -122,7 +120,7 @@ exports.update = async (req, res) => {
             }
           });
         }
-      } // if a new message is in the request
+      }
       if (req.body.content) {
         post.content = req.body.content;
       }

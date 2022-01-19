@@ -3,8 +3,13 @@
     <div class="card" v-for="p in post" :key="p">
       <div class="card_top">
         <div class="card_top_left">
-          <!-- <img :src="p.User" alt="Avatar" class="avatar" /> -->
-          <!-- <h2>{{ p.User }}</h2> -->
+          <img
+            v-if="p.User && p.User.attachement"
+            :src="p.User && p.User.attachement"
+            alt="Avatar"
+            class="avatar"
+          />
+          <h2>{{ p.User && p.User.username }}</h2>
         </div>
 
         <div v-if="user.isAdmin" class="delete" @click="deletePost(p.id)">
@@ -29,7 +34,7 @@
 
       <div class="form-row">
         <input
-          v-model="commentInfos.content"
+          v-model="p.comment"
           class="form-row__input"
           type="text"
           placeholder="Ajoutez un commentaire"
@@ -37,7 +42,7 @@
         <span
           class="input-group-text"
           id="basic-addon1"
-          @click="addNewComment(p.id)"
+          @click="addNewComment(p)"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,8 +64,13 @@
         <div v-if="c.postId == p.id" class="card comment-style">
           <div class="card_top">
             <div class="card_top_left">
-              <!-- <img :src="c.User" alt="Avatar" class="avatar" /> -->
-              <!-- <h2>{{ c.User }}</h2> -->
+              <img
+                v-if="c.User && c.User.attachement"
+                :src="c.User && c.User.attachement"
+                alt="Avatar"
+                class="avatar"
+              />
+              <h2>{{ c.User && c.User.username }}</h2>
             </div>
 
             <div
@@ -120,17 +130,18 @@ export default {
     this.$store.dispatch("getAllComments");
   },
   methods: {
-    addNewComment(id) {
+    addNewComment(post) {
       let formData = new FormData();
-      formData.append("content", this.commentInfos.content);
+      formData.append("content", post.comment);
       commentsAPI
-        .post("/create/" + id, formData, {
+        .post("/create/" + post.id, formData, {
           headers: {
             Authorization: "Bearer " + this.$store.state.user.token,
           },
         })
         .then(() => {
           this.$store.dispatch("getAllComments");
+          post.comment = "";
         });
     },
 
