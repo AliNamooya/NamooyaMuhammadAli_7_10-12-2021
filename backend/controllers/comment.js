@@ -12,14 +12,14 @@ exports.createComment = (req, res) => {
     .then((result) => {
       console.log(result);
       res.status(201).json({
-        message: "Comment created successfully",
+        message: "Commentaire crée",
         post: result,
       });
     })
     .catch((error) => {
       console.log(error);
       res.status(500).json({
-        message: "Something went wrong",
+        message: "Une erreur s'est produite",
         error: error,
       });
     });
@@ -64,13 +64,13 @@ exports.postsComment = (req, res) => {
         res.status(200).json(result);
       } else {
         res.status(404).json({
-          message: "post not found!",
+          message: "Post introuvable",
         });
       }
     })
     .catch((error) => {
       res.status(500).json({
-        message: "Something went wrong!",
+        message: "Une erreur s'est produite",
       });
     });
 };

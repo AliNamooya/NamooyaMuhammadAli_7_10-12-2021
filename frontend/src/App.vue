@@ -31,7 +31,6 @@ export default {
 #container {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; Pour la page login */
   align-items: center;
   max-width: 100%;
   width: 100%;
@@ -126,5 +125,31 @@ img {
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
+}
+
+.comment-style {
+  background-color: rgba(128, 128, 128, 0.255);
+}
+
+.input-group-text {
+  cursor: pointer;
+}
+
+.bi-x {
+  color: red;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 576px) {
+  .card_container {
+    width: 90%;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+  }
 }
 </style>

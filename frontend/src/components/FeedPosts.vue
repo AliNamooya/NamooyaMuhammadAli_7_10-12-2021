@@ -151,8 +151,7 @@ export default {
           headers: { Authorization: "Bearer " + this.$store.state.user.token },
         })
         .then(() => {
-          //ca rafraichit immediatement la page apres avoir supprimer un post
-          this.$store.dispatch("getUserPosts");
+          window.location.reload();
         });
     },
 
@@ -166,7 +165,6 @@ export default {
           this.$store.dispatch("getAllComments");
         });
     },
-    // this.$store.state.user.token
   },
   computed: {
     ...mapState({
@@ -208,13 +206,6 @@ p {
   font-size: 1.1rem;
 }
 
-.bi-x {
-  color: red;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-}
-
 .delete {
   width: 5%;
 }
@@ -235,13 +226,5 @@ img {
 
 .bi-hand-thumbs-up {
   color: white;
-}
-
-.comment-style {
-  background-color: rgba(128, 128, 128, 0.255);
-}
-
-.input-group-text {
-  cursor: pointer;
 }
 </style>

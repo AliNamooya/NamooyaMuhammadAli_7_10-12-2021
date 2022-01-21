@@ -68,7 +68,7 @@ exports.login = (req, res) => {
                 isAdmin: user.isAdmin,
               });
             } else {
-              res.status(403).json({ error: "invalid password" });
+              res.status(403).json({ error: "mot de passe invalid" });
             }
           }
         );
@@ -100,22 +100,6 @@ exports.updateUser = async (req, res) => {
     const userId = utils.getUserId(req.headers.authorization);
     let user = await models.User.findOne({ where: { id: userId } });
     if (userId == user.id) {
-      // if (req.file != null) {
-      //   newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
-      //     req.file.filename
-      //   }`;
-      //   // si une image est dans la BDD
-      //   if (user.attachement) {
-      //     const filename = user.attachement.split("/images")[1];
-      //     // suppression de l'image dans le dossier "images"
-      //     fs.unlink(`images/${filename}`, (err) => {
-      //       if (err) console.log(err);
-      //       else {
-      //         console.log(`Deleted file: images/${filename}`);
-      //       }
-      //     });
-      //   }
-      // }
       // si une image a été selectionner
       if (req.file != null) {
         newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
@@ -140,43 +124,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-//Suppression d'un compte
-// exports.deleteProfile = (req, res) => {
-//   //récupération de l'id de l'user
-//   let userId = utils.getUserId(req.headers.authorization);
-//   if (userId != null) {
-//     //Recherche sécurité si user existe bien
-//     models.User.findOne({
-//       where: { id: userId },
-//     }).then((user) => {
-//       if (user != null) {
-//         //Delete de tous les posts de l'user même s'il y en a pas
-//         models.Post.destroy({
-//           where: { userId: user.id },
-//         })
-//           .then(() => {
-//             console.log("Tous les posts de ce user ont été supprimé");
-//             //Suppression de l'utilisateur
-//             models.User.destroy({
-//               where: { id: user.id },
-//             })
-//               .then(() => res.end())
-//               .catch((err) => console.log(err));
-//           })
-//           .catch((err) => res.status(500).json(err));
-//       } else {
-//         res.status(401).json({ error: "Ce user n'existe pas" });
-//       }
-//     });
-//   } else {
-//     res.status(500).json({
-//       error: "Impossible de supprimer ce compte, contacter un administrateur",
-//     });
-//   }
-//rajouter la suppresion des commentaires liée au userID aussi
-//};
-
-// test Suppression d'un compte --------------------------
+//  Suppression d'un compte
 exports.deleteProfile = async (req, res) => {
   try {
     //récupération de l'id de l'user
@@ -188,28 +136,6 @@ exports.deleteProfile = async (req, res) => {
       })
         .then((user) => {
           if (user != null) {
-            // if (user.attachement) {
-            //   const filename = user.attachement.split("/images/")[1];
-            //   fs.unlink(`images/${filename}`, () => {
-            //     models.Comments.destroy({ where: { UserId: user.id } })
-            //       .then(() => {
-            //         models.Post.destroy({
-            //           where: { userId: user.id },
-            //         });
-            //       })
-            //       .then(() => {
-            //         console.log("Compte supprimé");
-            //         //Suppression de l'utilisateur
-            //         models.User.destroy({
-            //           where: { id: user.id },
-            //         })
-            //           .then(() => res.end())
-            //           .catch((err) => console.log(err));
-            //       })
-            //       .catch((err) => res.status(500).json(err));
-            //     res.status(200).json({ message: "User supprimé" });
-            //   });
-            // } else {
             //suppression des commentaires liées au userId
             models.Comments.destroy({ where: { UserId: user.id } })
               .then(() => {

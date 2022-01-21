@@ -71,7 +71,7 @@ exports.showUserPost = (req, res) => {
     })
     .catch((error) => {
       res.status(500).json({
-        message: "Something went wrong!",
+        message: "Une erreur s'est produite",
       });
     });
 };
@@ -95,48 +95,6 @@ exports.listMsg = (req, res) => {
       }
     })
     .catch((err) => res.status(500).json(err));
-};
-
-//Modification d'un post
-exports.update = async (req, res) => {
-  try {
-    let newAttachementURL;
-    const userId = utils.getUserId(req.headers.authorization);
-    let post = await models.Post.findOne({ where: { id: req.params.id } });
-
-    if (userId == post.userId) {
-      if (req.file != null) {
-        newAttachementURL = `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`;
-
-        if (post.attachement) {
-          const filename = post.attachement.split("/images")[1];
-
-          fs.unlink(`images/${filename}`, (err) => {
-            if (err) console.log(err);
-            else {
-              console.log(`Deleted file: images/${filename}`);
-            }
-          });
-        }
-      }
-      if (req.body.content) {
-        post.content = req.body.content;
-      }
-
-      post.attachement = newAttachementURL;
-      // then we save everything in database
-      const newPost = await post.save({
-        fields: ["content", "attachement"],
-      });
-      res.status(200).json({ newPost: newPost, message: "post modifié" });
-    } else {
-      res.status(400).json({ message: "Vous n'avez pas les droits requis" });
-    }
-  } catch (error) {
-    return res.status(500).send({ error: "Erreur serveur" });
-  }
 };
 
 //Suppression d'un post

@@ -2,7 +2,7 @@
 
 ## Création d'un réseau social d'entreprise pour Groupomania
 
-Télécharger le repository et suivez les instructions ci-après pour installer ce projet en local
+Télécharger le repository et suivez les instructions pour installer ce projet en local
 
 ## prérequis
 
@@ -15,9 +15,9 @@ Télécharger le repository et suivez les instructions ci-après pour installer 
 - Ouvrez votre terminal
 - Connectez-vous à MySQL : `mysql -h localhost -u root -p`
 - Tapez votre mot de passe
-- Créez la base de données : `CREATE DATABASE groupomania_development;
-- Utilisez la base de données créée : `USE groupomania_database`
-- Dans le dossier backend, allez dans le fichier connectdb.js et renseignez votre mot de passe dans password:'xxxxxx'
+- Créez la base de données 'groupomania_development';
+- Dans le dossier backend, allez dans config/config.json et renseignez les informations de votre serveur MySQL
+- Dans le terminal faite 'npx sequelize db:migrate'
 - Le serveur tournera par defaut sur le localhost:3000
 
 ## Installation :

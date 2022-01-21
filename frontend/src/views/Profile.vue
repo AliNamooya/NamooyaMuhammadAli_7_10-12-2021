@@ -88,6 +88,7 @@ export default {
       return; //rerturn pour que le code en bas ne soit pas accessible si le user n'est pas logger
     }
     //on affiche les informations du user
+
     this.$store.dispatch("getUserInfos");
   },
   computed: {
@@ -133,7 +134,7 @@ export default {
   align-items: center;
   max-width: 100%;
   width: 100%;
-  background-image: linear-gradient(62deg, #fbab7e 0%, #f7ce68 100%);
+
   min-height: 100vh;
 }
 
