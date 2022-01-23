@@ -151,5 +151,9 @@ img {
   .card {
     width: 90%;
   }
+
+  .margin_right {
+    margin-right: 10%;
+  }
 }
 </style>

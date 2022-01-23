@@ -45,36 +45,6 @@ exports.listComment = (req, res) => {
     .catch((err) => res.status(500).json(err));
 };
 
-//afficher le commentaire liée a son post
-exports.postsComment = (req, res) => {
-  const postId = req.params.id;
-
-  //recuperer le model des post
-  models.Comments.findAll({
-    include: {
-      where: { id: postId },
-      model: models.Post,
-      attributes: ["id", "content", "userId"], //on affiche le username de celui qui a crée le post
-    },
-  })
-    .then((result) => {
-      if (result != null) {
-        //on affiche le resultat des requetes ici
-
-        res.status(200).json(result);
-      } else {
-        res.status(404).json({
-          message: "Post introuvable",
-        });
-      }
-    })
-    .catch((error) => {
-      res.status(500).json({
-        message: "Une erreur s'est produite",
-      });
-    });
-};
-
 //Suppression d'un commentaire (fonctionne pas pour l'instant)
 exports.deleteComment = async (req, res) => {
   try {
