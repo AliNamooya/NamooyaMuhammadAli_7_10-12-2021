@@ -151,7 +151,7 @@ export default {
           headers: { Authorization: "Bearer " + this.$store.state.user.token },
         })
         .then(() => {
-          window.location.reload();
+          this.$store.dispatch("getAllPosts");
         });
     },
 
